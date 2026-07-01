@@ -1,3 +1,10 @@
+const FRIENDLY_STATUS_MESSAGES = {
+    401: 'La API key no es válida o no tiene acceso a este modelo.',
+    403: 'Acceso denegado a este modelo (puede requerir aceptar términos en el panel del proveedor).',
+    404: 'El modelo no existe o ya no está disponible en este proveedor.',
+    429: 'Límite de uso gratuito alcanzado para este modelo. Esperá unos segundos o probá otro modelo.'
+};
+
 module.exports = async (req, res) => {
     res.setHeader('Access-Control-Allow-Origin', '*');
     res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
@@ -11,10 +18,10 @@ module.exports = async (req, res) => {
         return res.status(405).json({ error: 'Método no permitido' });
     }
 
-    const { provider, model, message } = req.body || {};
+    const { provider, model, content, system } = req.body || {};
 
-    if (!provider || !model || !message) {
-        return res.status(400).json({ error: 'Faltan campos: provider, model o message' });
+    if (!provider || !model || !content) {
+        return res.status(400).json({ error: 'Faltan campos: provider, model o content' });
     }
 
     if (provider !== 'openrouter' && provider !== 'nvidia') {
@@ -33,6 +40,11 @@ module.exports = async (req, res) => {
         return res.status(500).json({ error: `API Key para ${provider} no configurada en las variables de entorno de Vercel.` });
     }
 
+    const messages = [
+        ...(system ? [{ role: 'system', content: system }] : []),
+        { role: 'user', content }
+    ];
+
     try {
         const response = await fetch(apiUrl, {
             method: 'POST',
@@ -44,7 +56,7 @@ module.exports = async (req, res) => {
             },
             body: JSON.stringify({
                 model,
-                messages: [{ role: 'user', content: message }],
+                messages,
                 ...(provider === 'nvidia' ? { max_tokens: 1024, temperature: 0.7 } : {})
             })
         });
@@ -58,8 +70,10 @@ module.exports = async (req, res) => {
         }
 
         if (!response.ok) {
+            const friendly = FRIENDLY_STATUS_MESSAGES[response.status];
             const providerError = data.error?.message || data.error || JSON.stringify(data);
-            return res.status(response.status).json({ error: `${provider}: ${providerError}` });
+            const message = friendly ? `${friendly} (${providerError})` : providerError;
+            return res.status(response.status).json({ error: `${provider}: ${message}` });
         }
 
         const text = data.choices?.[0]?.message?.content;

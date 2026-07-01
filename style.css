@@ -151,3 +151,38 @@
     color: #6b7280;
     text-align: center;
 }
+
+.mode-btn {
+    color: #9ca3af;
+    transition: background-color 0.15s, color 0.15s;
+    white-space: nowrap;
+}
+
+.mode-btn.is-active {
+    background: #4338ca;
+    color: #fff;
+}
+
+#single-provider-toggle .mode-btn.is-active {
+    background: #15803d;
+}
+
+.agent-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.25rem;
+    font-size: 0.6rem;
+    font-weight: 600;
+    color: #fbbf24;
+    background: rgba(120, 53, 15, 0.35);
+    border: 1px solid rgba(217, 119, 6, 0.4);
+    border-radius: 9999px;
+    padding: 0.05rem 0.5rem;
+}
+
+.attached-image-thumb {
+    max-width: 12rem;
+    border-radius: 0.5rem;
+    border: 1px solid #374151;
+    margin-top: 0.5rem;
+}

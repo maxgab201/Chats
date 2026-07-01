@@ -1,139 +1,125 @@
 const MODEL_DATA = {
     openrouter: [
-        { id: 'openrouter/free', label: 'Elegir mejor gratis automáticamente', vendor: 'Auto-Router' },
-        { id: 'cohere/north-mini-code:free', label: 'North Mini Code', vendor: 'Cohere' },
-        { id: 'google/gemma-4-26b-a4b-it:free', label: 'Gemma 4 26B A4B', vendor: 'Google' },
-        { id: 'google/gemma-4-31b-it:free', label: 'Gemma 4 31B', vendor: 'Google' },
-        { id: 'liquid/lfm-2.5-1.2b-instruct:free', label: 'LFM2.5-1.2B-Instruct', vendor: 'LiquidAI' },
-        { id: 'liquid/lfm-2.5-1.2b-thinking:free', label: 'LFM2.5-1.2B-Thinking', vendor: 'LiquidAI' },
-        { id: 'meta-llama/llama-3.2-3b-instruct:free', label: 'Llama 3.2 3B Instruct', vendor: 'Meta' },
-        { id: 'meta-llama/llama-3.3-70b-instruct:free', label: 'Llama 3.3 70B Instruct', vendor: 'Meta' },
-        { id: 'nvidia/nemotron-3-nano-30b-a3b:free', label: 'Nemotron 3 Nano 30B A3B', vendor: 'NVIDIA' },
-        { id: 'nvidia/nemotron-3-nano-omni-30b-a3b-reasoning:free', label: 'Nemotron 3 Nano Omni', vendor: 'NVIDIA' },
-        { id: 'nvidia/nemotron-3-super-120b-a12b:free', label: 'Nemotron 3 Super', vendor: 'NVIDIA' },
-        { id: 'nvidia/nemotron-3-ultra-550b-a55b:free', label: 'Nemotron 3 Ultra', vendor: 'NVIDIA' },
-        { id: 'nvidia/nemotron-3.5-content-safety:free', label: 'Nemotron 3.5 Content Safety', vendor: 'NVIDIA' },
-        { id: 'nvidia/nemotron-nano-12b-v2-vl:free', label: 'Nemotron Nano 12B 2 VL', vendor: 'NVIDIA' },
-        { id: 'nvidia/nemotron-nano-9b-v2:free', label: 'Nemotron Nano 9B V2', vendor: 'NVIDIA' },
-        { id: 'nousresearch/hermes-3-llama-3.1-405b:free', label: 'Hermes 3 405B Instruct', vendor: 'Nous' },
-        { id: 'openai/gpt-oss-120b:free', label: 'gpt-oss-120b', vendor: 'OpenAI' },
-        { id: 'openai/gpt-oss-20b:free', label: 'gpt-oss-20b', vendor: 'OpenAI' },
-        { id: 'poolside/laguna-m.1:free', label: 'Laguna M.1', vendor: 'Poolside' },
-        { id: 'poolside/laguna-xs.2:free', label: 'Laguna XS.2', vendor: 'Poolside' },
-        { id: 'qwen/qwen3-coder:free', label: 'Qwen3 Coder 480B A35B', vendor: 'Qwen' },
-        { id: 'qwen/qwen3-next-80b-a3b-instruct:free', label: 'Qwen3 Next 80B A3B Instruct', vendor: 'Qwen' },
-        { id: 'cognitivecomputations/dolphin-mistral-24b-venice-edition:free', label: 'Uncensored', vendor: 'Venice' }
+        { id: 'openrouter/free', label: 'Elegir mejor gratis automáticamente', vendor: 'Auto-Router', vision: false, top: false },
+        { id: 'cohere/north-mini-code:free', label: 'North Mini Code', vendor: 'Cohere', vision: false, top: false },
+        { id: 'google/gemma-4-26b-a4b-it:free', label: 'Gemma 4 26B A4B', vendor: 'Google', vision: true, top: false },
+        { id: 'google/gemma-4-31b-it:free', label: 'Gemma 4 31B', vendor: 'Google', vision: true, top: false },
+        { id: 'liquid/lfm-2.5-1.2b-instruct:free', label: 'LFM2.5-1.2B-Instruct', vendor: 'LiquidAI', vision: false, top: false },
+        { id: 'liquid/lfm-2.5-1.2b-thinking:free', label: 'LFM2.5-1.2B-Thinking', vendor: 'LiquidAI', vision: false, top: false },
+        { id: 'meta-llama/llama-3.2-3b-instruct:free', label: 'Llama 3.2 3B Instruct', vendor: 'Meta', vision: false, top: false },
+        { id: 'meta-llama/llama-3.3-70b-instruct:free', label: 'Llama 3.3 70B Instruct', vendor: 'Meta', vision: false, top: true },
+        { id: 'nvidia/nemotron-3-nano-30b-a3b:free', label: 'Nemotron 3 Nano 30B A3B', vendor: 'NVIDIA', vision: false, top: false },
+        { id: 'nvidia/nemotron-3-nano-omni-30b-a3b-reasoning:free', label: 'Nemotron 3 Nano Omni', vendor: 'NVIDIA', vision: true, top: false },
+        { id: 'nvidia/nemotron-3-super-120b-a12b:free', label: 'Nemotron 3 Super', vendor: 'NVIDIA', vision: false, top: true },
+        { id: 'nvidia/nemotron-3-ultra-550b-a55b:free', label: 'Nemotron 3 Ultra', vendor: 'NVIDIA', vision: false, top: true },
+        { id: 'nvidia/nemotron-nano-12b-v2-vl:free', label: 'Nemotron Nano 12B 2 VL', vendor: 'NVIDIA', vision: true, top: false },
+        { id: 'nvidia/nemotron-nano-9b-v2:free', label: 'Nemotron Nano 9B V2', vendor: 'NVIDIA', vision: false, top: false },
+        { id: 'nousresearch/hermes-3-llama-3.1-405b:free', label: 'Hermes 3 405B Instruct', vendor: 'Nous', vision: false, top: true },
+        { id: 'openai/gpt-oss-120b:free', label: 'gpt-oss-120b', vendor: 'OpenAI', vision: false, top: true },
+        { id: 'openai/gpt-oss-20b:free', label: 'gpt-oss-20b', vendor: 'OpenAI', vision: false, top: false },
+        { id: 'poolside/laguna-m.1:free', label: 'Laguna M.1', vendor: 'Poolside', vision: false, top: true },
+        { id: 'poolside/laguna-xs.2:free', label: 'Laguna XS.2', vendor: 'Poolside', vision: false, top: false },
+        { id: 'qwen/qwen3-coder:free', label: 'Qwen3 Coder 480B A35B', vendor: 'Qwen', vision: false, top: true },
+        { id: 'qwen/qwen3-next-80b-a3b-instruct:free', label: 'Qwen3 Next 80B A3B Instruct', vendor: 'Qwen', vision: false, top: false },
+        { id: 'cognitivecomputations/dolphin-mistral-24b-venice-edition:free', label: 'Uncensored', vendor: 'Venice', vision: false, top: false }
     ],
     nvidia: [
-        { id: '01-ai/yi-large', label: 'Yi Large', vendor: '01.AI' },
-        { id: 'aisingapore/sea-lion-7b-instruct', label: 'Sea Lion 7B Instruct', vendor: 'AI Singapore' },
-        { id: 'ai21labs/jamba-1.5-large-instruct', label: 'Jamba 1.5 Large Instruct', vendor: 'AI21 Labs' },
-        { id: 'abacusai/dracarys-llama-3.1-70b-instruct', label: 'Dracarys Llama 3.1 70B Instruct', vendor: 'Abacus.AI' },
-        { id: 'adept/fuyu-8b', label: 'Fuyu 8B', vendor: 'Adept' },
-        { id: 'bigcode/starcoder2-15b', label: 'Starcoder2 15B', vendor: 'BigCode' },
-        { id: 'bytedance/seed-oss-36b-instruct', label: 'Seed OSS 36B Instruct', vendor: 'ByteDance' },
-        { id: 'databricks/dbrx-instruct', label: 'DBRX Instruct', vendor: 'Databricks' },
-        { id: 'deepseek-ai/deepseek-coder-6.7b-instruct', label: 'Deepseek Coder 6.7B Instruct', vendor: 'DeepSeek' },
-        { id: 'deepseek-ai/deepseek-v4-flash', label: 'Deepseek V4 Flash', vendor: 'DeepSeek' },
-        { id: 'deepseek-ai/deepseek-v4-pro', label: 'Deepseek V4 Pro', vendor: 'DeepSeek' },
-        { id: 'google/codegemma-1.1-7b', label: 'Codegemma 1.1 7B', vendor: 'Google' },
-        { id: 'google/codegemma-7b', label: 'Codegemma 7B', vendor: 'Google' },
-        { id: 'google/diffusiongemma-26b-a4b-it', label: 'Diffusiongemma 26B A4B IT', vendor: 'Google' },
-        { id: 'google/gemma-2-2b-it', label: 'Gemma 2 2B IT', vendor: 'Google' },
-        { id: 'google/gemma-2b', label: 'Gemma 2B', vendor: 'Google' },
-        { id: 'google/gemma-3-12b-it', label: 'Gemma 3 12B IT', vendor: 'Google' },
-        { id: 'google/gemma-3-4b-it', label: 'Gemma 3 4B IT', vendor: 'Google' },
-        { id: 'google/gemma-3n-e2b-it', label: 'Gemma 3n E2b IT', vendor: 'Google' },
-        { id: 'google/gemma-3n-e4b-it', label: 'Gemma 3n E4b IT', vendor: 'Google' },
-        { id: 'google/gemma-4-31b-it', label: 'Gemma 4 31B IT', vendor: 'Google' },
-        { id: 'google/recurrentgemma-2b', label: 'Recurrentgemma 2B', vendor: 'Google' },
-        { id: 'ibm/granite-3.0-3b-a800m-instruct', label: 'Granite 3.0 3B A800M Instruct', vendor: 'IBM' },
-        { id: 'ibm/granite-3.0-8b-instruct', label: 'Granite 3.0 8B Instruct', vendor: 'IBM' },
-        { id: 'ibm/granite-34b-code-instruct', label: 'Granite 34B Code Instruct', vendor: 'IBM' },
-        { id: 'ibm/granite-8b-code-instruct', label: 'Granite 8B Code Instruct', vendor: 'IBM' },
-        { id: 'meta/codellama-70b', label: 'Codellama 70B', vendor: 'Meta' },
-        { id: 'meta/llama-3.1-70b-instruct', label: 'Llama 3.1 70B Instruct', vendor: 'Meta' },
-        { id: 'meta/llama-3.1-8b-instruct', label: 'Llama 3.1 8B Instruct', vendor: 'Meta' },
-        { id: 'meta/llama-3.2-11b-vision-instruct', label: 'Llama 3.2 11B Vision Instruct', vendor: 'Meta' },
-        { id: 'meta/llama-3.2-1b-instruct', label: 'Llama 3.2 1B Instruct', vendor: 'Meta' },
-        { id: 'meta/llama-3.2-3b-instruct', label: 'Llama 3.2 3B Instruct', vendor: 'Meta' },
-        { id: 'meta/llama-3.2-90b-vision-instruct', label: 'Llama 3.2 90B Vision Instruct', vendor: 'Meta' },
-        { id: 'meta/llama-3.3-70b-instruct', label: 'Llama 3.3 70B Instruct', vendor: 'Meta' },
-        { id: 'meta/llama-4-maverick-17b-128e-instruct', label: 'Llama 4 Maverick 17B 128e Instruct', vendor: 'Meta' },
-        { id: 'meta/llama-guard-4-12b', label: 'Llama Guard 4 12B', vendor: 'Meta' },
-        { id: 'meta/llama2-70b', label: 'Llama2 70B', vendor: 'Meta' },
-        { id: 'microsoft/phi-3-vision-128k-instruct', label: 'Phi 3 Vision 128K Instruct', vendor: 'Microsoft' },
-        { id: 'microsoft/phi-3.5-moe-instruct', label: 'Phi 3.5 MoE Instruct', vendor: 'Microsoft' },
-        { id: 'microsoft/phi-4-mini-instruct', label: 'Phi 4 Mini Instruct', vendor: 'Microsoft' },
-        { id: 'microsoft/phi-4-multimodal-instruct', label: 'Phi 4 Multimodal Instruct', vendor: 'Microsoft' },
-        { id: 'minimaxai/minimax-m2.7', label: 'Minimax M2.7', vendor: 'MiniMax' },
-        { id: 'minimaxai/minimax-m3', label: 'Minimax M3', vendor: 'MiniMax' },
-        { id: 'mistralai/codestral-22b-instruct-v0.1', label: 'Codestral 22B Instruct V0.1', vendor: 'Mistral AI' },
-        { id: 'mistralai/ministral-14b-instruct-2512', label: 'Ministral 14B Instruct 2512', vendor: 'Mistral AI' },
-        { id: 'mistralai/mistral-7b-instruct-v0.3', label: 'Mistral 7B Instruct V0.3', vendor: 'Mistral AI' },
-        { id: 'mistralai/mistral-large', label: 'Mistral Large', vendor: 'Mistral AI' },
-        { id: 'mistralai/mistral-large-2-instruct', label: 'Mistral Large 2 Instruct', vendor: 'Mistral AI' },
-        { id: 'mistralai/mistral-large-3-675b-instruct-2512', label: 'Mistral Large 3 675B Instruct 2512', vendor: 'Mistral AI' },
-        { id: 'mistralai/mistral-medium-3.5-128b', label: 'Mistral Medium 3.5 128B', vendor: 'Mistral AI' },
-        { id: 'mistralai/mistral-nemotron', label: 'Mistral Nemotron', vendor: 'Mistral AI' },
-        { id: 'mistralai/mistral-small-4-119b-2603', label: 'Mistral Small 4 119B 2603', vendor: 'Mistral AI' },
-        { id: 'mistralai/mixtral-8x22b-v0.1', label: 'Mixtral 8x22b V0.1', vendor: 'Mistral AI' },
-        { id: 'mistralai/mixtral-8x7b-instruct-v0.1', label: 'Mixtral 8x7b Instruct V0.1', vendor: 'Mistral AI' },
-        { id: 'moonshotai/kimi-k2.6', label: 'Kimi K2.6', vendor: 'Moonshot AI' },
-        { id: 'nvidia/cosmos-reason2-8b', label: 'Cosmos Reason2 8B', vendor: 'NVIDIA' },
-        { id: 'nvidia/llama-3.1-nemoguard-8b-content-safety', label: 'Llama 3.1 Nemoguard 8B Content Safety', vendor: 'NVIDIA' },
-        { id: 'nvidia/llama-3.1-nemoguard-8b-topic-control', label: 'Llama 3.1 Nemoguard 8B Topic Control', vendor: 'NVIDIA' },
-        { id: 'nvidia/llama-3.1-nemotron-51b-instruct', label: 'Llama 3.1 Nemotron 51B Instruct', vendor: 'NVIDIA' },
-        { id: 'nvidia/llama-3.1-nemotron-70b-instruct', label: 'Llama 3.1 Nemotron 70B Instruct', vendor: 'NVIDIA' },
-        { id: 'nvidia/llama-3.1-nemotron-nano-8b-v1', label: 'Llama 3.1 Nemotron Nano 8B V1', vendor: 'NVIDIA' },
-        { id: 'nvidia/llama-3.1-nemotron-nano-vl-8b-v1', label: 'Llama 3.1 Nemotron Nano VL 8B V1', vendor: 'NVIDIA' },
-        { id: 'nvidia/llama-3.1-nemotron-safety-guard-8b-v3', label: 'Llama 3.1 Nemotron Safety Guard 8B V3', vendor: 'NVIDIA' },
-        { id: 'nvidia/llama-3.1-nemotron-ultra-253b-v1', label: 'Llama 3.1 Nemotron Ultra 253B V1', vendor: 'NVIDIA' },
-        { id: 'nvidia/llama-3.3-nemotron-super-49b-v1', label: 'Llama 3.3 Nemotron Super 49B V1', vendor: 'NVIDIA' },
-        { id: 'nvidia/llama-3.3-nemotron-super-49b-v1.5', label: 'Llama 3.3 Nemotron Super 49B V1.5', vendor: 'NVIDIA' },
-        { id: 'nvidia/llama3-chatqa-1.5-70b', label: 'Llama3 ChatQA 1.5 70B', vendor: 'NVIDIA' },
-        { id: 'nvidia/mistral-nemo-minitron-8b-8k-instruct', label: 'Mistral Nemo Minitron 8B 8K Instruct', vendor: 'NVIDIA' },
-        { id: 'nvidia/nvidia-nemotron-nano-9b-v2', label: 'NVIDIA Nemotron Nano 9B V2', vendor: 'NVIDIA' },
-        { id: 'nvidia/nemotron-3-content-safety', label: 'Nemotron 3 Content Safety', vendor: 'NVIDIA' },
-        { id: 'nvidia/nemotron-3-nano-30b-a3b', label: 'Nemotron 3 Nano 30B A3B', vendor: 'NVIDIA' },
-        { id: 'nvidia/nemotron-3-nano-omni-30b-a3b-reasoning', label: 'Nemotron 3 Nano Omni 30B A3B Reasoning', vendor: 'NVIDIA' },
-        { id: 'nvidia/nemotron-3-super-120b-a12b', label: 'Nemotron 3 Super 120B A12B', vendor: 'NVIDIA' },
-        { id: 'nvidia/nemotron-3-ultra-550b-a55b', label: 'Nemotron 3 Ultra 550B A55B', vendor: 'NVIDIA' },
-        { id: 'nvidia/nemotron-3.5-content-safety', label: 'Nemotron 3.5 Content Safety', vendor: 'NVIDIA' },
-        { id: 'nvidia/nemotron-4-340b-instruct', label: 'Nemotron 4 340B Instruct', vendor: 'NVIDIA' },
-        { id: 'nvidia/nemotron-content-safety-reasoning-4b', label: 'Nemotron Content Safety Reasoning 4B', vendor: 'NVIDIA' },
-        { id: 'nvidia/nemotron-mini-4b-instruct', label: 'Nemotron Mini 4B Instruct', vendor: 'NVIDIA' },
-        { id: 'nvidia/nemotron-nano-12b-v2-vl', label: 'Nemotron Nano 12B V2 VL', vendor: 'NVIDIA' },
-        { id: 'nvidia/nemotron-nano-3-30b-a3b', label: 'Nemotron Nano 3 30B A3B', vendor: 'NVIDIA' },
-        { id: 'nvidia/nemotron-parse', label: 'Nemotron Parse', vendor: 'NVIDIA' },
-        { id: 'nvidia/neva-22b', label: 'Neva 22B', vendor: 'NVIDIA' },
-        { id: 'nvidia/vila', label: 'Vila', vendor: 'NVIDIA' },
-        { id: 'nv-mistralai/mistral-nemo-12b-instruct', label: 'Mistral Nemo 12B Instruct', vendor: 'NVIDIA + Mistral' },
-        { id: 'openai/gpt-oss-120b', label: 'GPT OSS 120B', vendor: 'OpenAI' },
-        { id: 'openai/gpt-oss-20b', label: 'GPT OSS 20B', vendor: 'OpenAI' },
-        { id: 'qwen/qwen3-next-80b-a3b-instruct', label: 'Qwen3 Next 80B A3B Instruct', vendor: 'Qwen' },
-        { id: 'qwen/qwen3.5-122b-a10b', label: 'Qwen3.5 122B A10B', vendor: 'Qwen' },
-        { id: 'qwen/qwen3.5-397b-a17b', label: 'Qwen3.5 397B A17B', vendor: 'Qwen' },
-        { id: 'sarvamai/sarvam-m', label: 'Sarvam M', vendor: 'Sarvam AI' },
-        { id: 'stepfun-ai/step-3.5-flash', label: 'Step 3.5 Flash', vendor: 'StepFun' },
-        { id: 'stepfun-ai/step-3.7-flash', label: 'Step 3.7 Flash', vendor: 'StepFun' },
-        { id: 'stockmark/stockmark-2-100b-instruct', label: 'Stockmark 2 100B Instruct', vendor: 'Stockmark' },
-        { id: 'upstage/solar-10.7b-instruct', label: 'Solar 10.7B Instruct', vendor: 'Upstage' },
-        { id: 'writer/palmyra-creative-122b', label: 'Palmyra Creative 122B', vendor: 'Writer' },
-        { id: 'writer/palmyra-fin-70b-32k', label: 'Palmyra Fin 70B 32K', vendor: 'Writer' },
-        { id: 'writer/palmyra-med-70b', label: 'Palmyra Med 70B', vendor: 'Writer' },
-        { id: 'writer/palmyra-med-70b-32k', label: 'Palmyra Med 70B 32K', vendor: 'Writer' },
-        { id: 'z-ai/glm-5.1', label: 'Glm 5.1', vendor: 'Z.AI' },
-        { id: 'zyphra/zamba2-7b-instruct', label: 'Zamba2 7B Instruct', vendor: 'Zyphra' }
+        { id: '01-ai/yi-large', label: 'Yi Large', vendor: '01.AI', vision: false, top: false },
+        { id: 'aisingapore/sea-lion-7b-instruct', label: 'Sea Lion 7B Instruct', vendor: 'AI Singapore', vision: false, top: false },
+        { id: 'ai21labs/jamba-1.5-large-instruct', label: 'Jamba 1.5 Large Instruct', vendor: 'AI21 Labs', vision: false, top: false },
+        { id: 'abacusai/dracarys-llama-3.1-70b-instruct', label: 'Dracarys Llama 3.1 70B Instruct', vendor: 'Abacus.AI', vision: false, top: false },
+        { id: 'adept/fuyu-8b', label: 'Fuyu 8B', vendor: 'Adept', vision: true, top: false },
+        { id: 'bytedance/seed-oss-36b-instruct', label: 'Seed OSS 36B Instruct', vendor: 'ByteDance', vision: false, top: false },
+        { id: 'databricks/dbrx-instruct', label: 'DBRX Instruct', vendor: 'Databricks', vision: false, top: false },
+        { id: 'deepseek-ai/deepseek-coder-6.7b-instruct', label: 'Deepseek Coder 6.7B Instruct', vendor: 'DeepSeek', vision: false, top: false },
+        { id: 'deepseek-ai/deepseek-v4-flash', label: 'Deepseek V4 Flash', vendor: 'DeepSeek', vision: false, top: false },
+        { id: 'deepseek-ai/deepseek-v4-pro', label: 'Deepseek V4 Pro', vendor: 'DeepSeek', vision: false, top: true },
+        { id: 'google/codegemma-1.1-7b', label: 'Codegemma 1.1 7B', vendor: 'Google', vision: false, top: false },
+        { id: 'google/codegemma-7b', label: 'Codegemma 7B', vendor: 'Google', vision: false, top: false },
+        { id: 'google/gemma-2-2b-it', label: 'Gemma 2 2B IT', vendor: 'Google', vision: false, top: false },
+        { id: 'google/gemma-3-12b-it', label: 'Gemma 3 12B IT', vendor: 'Google', vision: false, top: false },
+        { id: 'google/gemma-3-4b-it', label: 'Gemma 3 4B IT', vendor: 'Google', vision: false, top: false },
+        { id: 'google/gemma-3n-e2b-it', label: 'Gemma 3n E2b IT', vendor: 'Google', vision: false, top: false },
+        { id: 'google/gemma-3n-e4b-it', label: 'Gemma 3n E4b IT', vendor: 'Google', vision: false, top: false },
+        { id: 'google/gemma-4-31b-it', label: 'Gemma 4 31B IT', vendor: 'Google', vision: false, top: false },
+        { id: 'ibm/granite-3.0-3b-a800m-instruct', label: 'Granite 3.0 3B A800M Instruct', vendor: 'IBM', vision: false, top: false },
+        { id: 'ibm/granite-3.0-8b-instruct', label: 'Granite 3.0 8B Instruct', vendor: 'IBM', vision: false, top: false },
+        { id: 'ibm/granite-34b-code-instruct', label: 'Granite 34B Code Instruct', vendor: 'IBM', vision: false, top: false },
+        { id: 'ibm/granite-8b-code-instruct', label: 'Granite 8B Code Instruct', vendor: 'IBM', vision: false, top: false },
+        { id: 'meta/llama-3.1-70b-instruct', label: 'Llama 3.1 70B Instruct', vendor: 'Meta', vision: false, top: false },
+        { id: 'meta/llama-3.1-8b-instruct', label: 'Llama 3.1 8B Instruct', vendor: 'Meta', vision: false, top: false },
+        { id: 'meta/llama-3.2-11b-vision-instruct', label: 'Llama 3.2 11B Vision Instruct', vendor: 'Meta', vision: true, top: false },
+        { id: 'meta/llama-3.2-1b-instruct', label: 'Llama 3.2 1B Instruct', vendor: 'Meta', vision: false, top: false },
+        { id: 'meta/llama-3.2-3b-instruct', label: 'Llama 3.2 3B Instruct', vendor: 'Meta', vision: false, top: false },
+        { id: 'meta/llama-3.2-90b-vision-instruct', label: 'Llama 3.2 90B Vision Instruct', vendor: 'Meta', vision: true, top: false },
+        { id: 'meta/llama-3.3-70b-instruct', label: 'Llama 3.3 70B Instruct', vendor: 'Meta', vision: false, top: true },
+        { id: 'meta/llama-4-maverick-17b-128e-instruct', label: 'Llama 4 Maverick 17B 128e Instruct', vendor: 'Meta', vision: false, top: true },
+        { id: 'microsoft/phi-3-vision-128k-instruct', label: 'Phi 3 Vision 128K Instruct', vendor: 'Microsoft', vision: true, top: false },
+        { id: 'microsoft/phi-3.5-moe-instruct', label: 'Phi 3.5 MoE Instruct', vendor: 'Microsoft', vision: false, top: false },
+        { id: 'microsoft/phi-4-mini-instruct', label: 'Phi 4 Mini Instruct', vendor: 'Microsoft', vision: false, top: false },
+        { id: 'microsoft/phi-4-multimodal-instruct', label: 'Phi 4 Multimodal Instruct', vendor: 'Microsoft', vision: true, top: false },
+        { id: 'minimaxai/minimax-m2.7', label: 'Minimax M2.7', vendor: 'MiniMax', vision: false, top: false },
+        { id: 'minimaxai/minimax-m3', label: 'Minimax M3', vendor: 'MiniMax', vision: false, top: true },
+        { id: 'mistralai/codestral-22b-instruct-v0.1', label: 'Codestral 22B Instruct V0.1', vendor: 'Mistral AI', vision: false, top: false },
+        { id: 'mistralai/ministral-14b-instruct-2512', label: 'Ministral 14B Instruct 2512', vendor: 'Mistral AI', vision: false, top: false },
+        { id: 'mistralai/mistral-7b-instruct-v0.3', label: 'Mistral 7B Instruct V0.3', vendor: 'Mistral AI', vision: false, top: false },
+        { id: 'mistralai/mistral-large', label: 'Mistral Large', vendor: 'Mistral AI', vision: false, top: false },
+        { id: 'mistralai/mistral-large-2-instruct', label: 'Mistral Large 2 Instruct', vendor: 'Mistral AI', vision: false, top: false },
+        { id: 'mistralai/mistral-large-3-675b-instruct-2512', label: 'Mistral Large 3 675B Instruct 2512', vendor: 'Mistral AI', vision: false, top: true },
+        { id: 'mistralai/mistral-medium-3.5-128b', label: 'Mistral Medium 3.5 128B', vendor: 'Mistral AI', vision: false, top: false },
+        { id: 'mistralai/mistral-nemotron', label: 'Mistral Nemotron', vendor: 'Mistral AI', vision: false, top: false },
+        { id: 'mistralai/mistral-small-4-119b-2603', label: 'Mistral Small 4 119B 2603', vendor: 'Mistral AI', vision: false, top: false },
+        { id: 'mistralai/mixtral-8x7b-instruct-v0.1', label: 'Mixtral 8x7b Instruct V0.1', vendor: 'Mistral AI', vision: false, top: false },
+        { id: 'moonshotai/kimi-k2.6', label: 'Kimi K2.6', vendor: 'Moonshot AI', vision: false, top: true },
+        { id: 'nvidia/cosmos-reason2-8b', label: 'Cosmos Reason2 8B', vendor: 'NVIDIA', vision: true, top: false },
+        { id: 'nvidia/llama-3.1-nemotron-51b-instruct', label: 'Llama 3.1 Nemotron 51B Instruct', vendor: 'NVIDIA', vision: false, top: false },
+        { id: 'nvidia/llama-3.1-nemotron-70b-instruct', label: 'Llama 3.1 Nemotron 70B Instruct', vendor: 'NVIDIA', vision: false, top: false },
+        { id: 'nvidia/llama-3.1-nemotron-nano-8b-v1', label: 'Llama 3.1 Nemotron Nano 8B V1', vendor: 'NVIDIA', vision: false, top: false },
+        { id: 'nvidia/llama-3.1-nemotron-nano-vl-8b-v1', label: 'Llama 3.1 Nemotron Nano VL 8B V1', vendor: 'NVIDIA', vision: true, top: false },
+        { id: 'nvidia/llama-3.1-nemotron-ultra-253b-v1', label: 'Llama 3.1 Nemotron Ultra 253B V1', vendor: 'NVIDIA', vision: false, top: true },
+        { id: 'nvidia/llama-3.3-nemotron-super-49b-v1', label: 'Llama 3.3 Nemotron Super 49B V1', vendor: 'NVIDIA', vision: false, top: false },
+        { id: 'nvidia/llama-3.3-nemotron-super-49b-v1.5', label: 'Llama 3.3 Nemotron Super 49B V1.5', vendor: 'NVIDIA', vision: false, top: false },
+        { id: 'nvidia/llama3-chatqa-1.5-70b', label: 'Llama3 ChatQA 1.5 70B', vendor: 'NVIDIA', vision: false, top: false },
+        { id: 'nvidia/mistral-nemo-minitron-8b-8k-instruct', label: 'Mistral Nemo Minitron 8B 8K Instruct', vendor: 'NVIDIA', vision: false, top: false },
+        { id: 'nvidia/nvidia-nemotron-nano-9b-v2', label: 'NVIDIA Nemotron Nano 9B V2', vendor: 'NVIDIA', vision: false, top: false },
+        { id: 'nvidia/nemotron-3-nano-30b-a3b', label: 'Nemotron 3 Nano 30B A3B', vendor: 'NVIDIA', vision: false, top: false },
+        { id: 'nvidia/nemotron-3-nano-omni-30b-a3b-reasoning', label: 'Nemotron 3 Nano Omni 30B A3B Reasoning', vendor: 'NVIDIA', vision: false, top: false },
+        { id: 'nvidia/nemotron-3-super-120b-a12b', label: 'Nemotron 3 Super 120B A12B', vendor: 'NVIDIA', vision: false, top: false },
+        { id: 'nvidia/nemotron-3-ultra-550b-a55b', label: 'Nemotron 3 Ultra 550B A55B', vendor: 'NVIDIA', vision: false, top: false },
+        { id: 'nvidia/nemotron-4-340b-instruct', label: 'Nemotron 4 340B Instruct', vendor: 'NVIDIA', vision: false, top: false },
+        { id: 'nvidia/nemotron-mini-4b-instruct', label: 'Nemotron Mini 4B Instruct', vendor: 'NVIDIA', vision: false, top: false },
+        { id: 'nvidia/nemotron-nano-12b-v2-vl', label: 'Nemotron Nano 12B V2 VL', vendor: 'NVIDIA', vision: false, top: false },
+        { id: 'nvidia/nemotron-nano-3-30b-a3b', label: 'Nemotron Nano 3 30B A3B', vendor: 'NVIDIA', vision: false, top: false },
+        { id: 'nvidia/neva-22b', label: 'Neva 22B', vendor: 'NVIDIA', vision: true, top: false },
+        { id: 'nvidia/vila', label: 'Vila', vendor: 'NVIDIA', vision: true, top: false },
+        { id: 'nv-mistralai/mistral-nemo-12b-instruct', label: 'Mistral Nemo 12B Instruct', vendor: 'NVIDIA + Mistral', vision: false, top: false },
+        { id: 'openai/gpt-oss-120b', label: 'GPT OSS 120B', vendor: 'OpenAI', vision: false, top: false },
+        { id: 'openai/gpt-oss-20b', label: 'GPT OSS 20B', vendor: 'OpenAI', vision: false, top: false },
+        { id: 'qwen/qwen3-next-80b-a3b-instruct', label: 'Qwen3 Next 80B A3B Instruct', vendor: 'Qwen', vision: false, top: false },
+        { id: 'qwen/qwen3.5-122b-a10b', label: 'Qwen3.5 122B A10B', vendor: 'Qwen', vision: false, top: false },
+        { id: 'qwen/qwen3.5-397b-a17b', label: 'Qwen3.5 397B A17B', vendor: 'Qwen', vision: false, top: true },
+        { id: 'sarvamai/sarvam-m', label: 'Sarvam M', vendor: 'Sarvam AI', vision: false, top: false },
+        { id: 'stepfun-ai/step-3.5-flash', label: 'Step 3.5 Flash', vendor: 'StepFun', vision: false, top: false },
+        { id: 'stepfun-ai/step-3.7-flash', label: 'Step 3.7 Flash', vendor: 'StepFun', vision: false, top: false },
+        { id: 'stockmark/stockmark-2-100b-instruct', label: 'Stockmark 2 100B Instruct', vendor: 'Stockmark', vision: false, top: false },
+        { id: 'upstage/solar-10.7b-instruct', label: 'Solar 10.7B Instruct', vendor: 'Upstage', vision: false, top: false },
+        { id: 'writer/palmyra-creative-122b', label: 'Palmyra Creative 122B', vendor: 'Writer', vision: false, top: false },
+        { id: 'writer/palmyra-fin-70b-32k', label: 'Palmyra Fin 70B 32K', vendor: 'Writer', vision: false, top: false },
+        { id: 'writer/palmyra-med-70b', label: 'Palmyra Med 70B', vendor: 'Writer', vision: false, top: false },
+        { id: 'writer/palmyra-med-70b-32k', label: 'Palmyra Med 70B 32K', vendor: 'Writer', vision: false, top: false },
+        { id: 'z-ai/glm-5.1', label: 'Glm 5.1', vendor: 'Z.AI', vision: false, top: true },
+        { id: 'zyphra/zamba2-7b-instruct', label: 'Zamba2 7B Instruct', vendor: 'Zyphra', vision: false, top: false }
     ]
 };
 
-function createModelPicker({ containerId, buttonId, labelId, models, defaultId }) {
+const AGENT_SYSTEM_PROMPT = 'Actuás como un agente autónomo experto. Antes de responder: (1) planificá internamente los pasos necesarios, (2) resolvé el problema de forma metódica, verificando cada paso, (3) si la tarea se puede descomponer en sub-tareas, resolvelas en orden. Presentá al final una respuesta clara, directa y verificada, mostrando el razonamiento clave sin ser repetitivo.';
+
+function createModelPicker({ containerId, buttonId, labelId, models, defaultId, onChange }) {
     const container = document.getElementById(containerId);
     const button = document.getElementById(buttonId);
     const labelEl = document.getElementById(labelId);
 
-    const state = { value: null, name: '' };
+    const state = { model: null };
 
     const panel = document.createElement('div');
     panel.className = 'model-picker-panel hidden';
@@ -169,17 +155,18 @@ function createModelPicker({ containerId, buttonId, labelId, models, defaultId }
         for (const [vendor, items] of groups) {
             html += `<div class="model-picker-group-label">${escapeHTML(vendor)}</div>`;
             for (const m of items) {
-                const active = m.id === state.value ? ' is-active' : '';
-                html += `<button type="button" class="model-picker-option${active}" data-id="${escapeHTML(m.id)}" data-label="${escapeHTML(m.label)}">${escapeHTML(m.label)}</button>`;
+                const active = m.id === state.model.id ? ' is-active' : '';
+                const badges = [m.top ? '⭐' : '', m.vision ? '🖼️' : ''].filter(Boolean).join(' ');
+                html += `<button type="button" class="model-picker-option${active}" data-id="${escapeHTML(m.id)}">${escapeHTML(m.label)} ${badges}</button>`;
             }
         }
         optionsEl.innerHTML = html;
     }
 
-    function select(id, label) {
-        state.value = id;
-        state.name = label;
-        labelEl.textContent = label;
+    function select(model, silent) {
+        state.model = model;
+        labelEl.textContent = model.label;
+        if (!silent && typeof onChange === 'function') onChange(model);
     }
 
     function open() {
@@ -205,7 +192,8 @@ function createModelPicker({ containerId, buttonId, labelId, models, defaultId }
     optionsEl.addEventListener('click', (e) => {
         const btn = e.target.closest('.model-picker-option');
         if (!btn) return;
-        select(btn.dataset.id, btn.dataset.label);
+        const model = models.find(m => m.id === btn.dataset.id);
+        select(model);
         close();
     });
 
@@ -213,21 +201,28 @@ function createModelPicker({ containerId, buttonId, labelId, models, defaultId }
         if (!container.contains(e.target)) close();
     });
 
-    const initial = models.find(m => m.id === defaultId) || models[0];
-    select(initial.id, initial.label);
+    select(models.find(m => m.id === defaultId) || models[0], true);
 
     return {
-        getValue: () => state.value,
-        getName: () => state.name
+        getModel: () => state.model
     };
 }
+
+// ---------- Estado global de la app ----------
+const appState = {
+    mode: 'arena',          // 'arena' | 'single'
+    singleProvider: 'openrouter',
+    agentMode: false,
+    image: null             // { dataUrl, name }
+};
 
 const orPicker = createModelPicker({
     containerId: 'or-picker',
     buttonId: 'or-picker-btn',
     labelId: 'or-picker-label',
     models: MODEL_DATA.openrouter,
-    defaultId: 'openrouter/free'
+    defaultId: 'openrouter/free',
+    onChange: refreshToggles
 });
 
 const nvPicker = createModelPicker({
@@ -235,9 +230,115 @@ const nvPicker = createModelPicker({
     buttonId: 'nv-picker-btn',
     labelId: 'nv-picker-label',
     models: MODEL_DATA.nvidia,
-    defaultId: 'meta/llama-3.1-8b-instruct'
+    defaultId: 'meta/llama-3.1-8b-instruct',
+    onChange: refreshToggles
 });
 
+function activeSelections() {
+    if (appState.mode === 'single') {
+        const model = appState.singleProvider === 'openrouter' ? orPicker.getModel() : nvPicker.getModel();
+        return [{ provider: appState.singleProvider, model }];
+    }
+    return [
+        { provider: 'openrouter', model: orPicker.getModel() },
+        { provider: 'nvidia', model: nvPicker.getModel() }
+    ];
+}
+
+function refreshToggles() {
+    const selections = activeSelections();
+
+    const allTop = selections.every(s => s.model.top);
+    const agentCheckbox = document.getElementById('agent-mode-checkbox');
+    const agentHint = document.getElementById('agent-mode-hint');
+    agentCheckbox.disabled = !allTop;
+    if (!allTop) {
+        agentCheckbox.checked = false;
+        appState.agentMode = false;
+        agentHint.textContent = '(elegí un modelo top)';
+        agentHint.classList.remove('hidden');
+    } else {
+        agentHint.classList.add('hidden');
+    }
+
+    const allVision = selections.every(s => s.model.vision);
+    const attachBtn = document.getElementById('attach-btn');
+    attachBtn.disabled = !allVision;
+    attachBtn.title = allVision
+        ? 'Adjuntar imagen'
+        : 'Adjuntar imagen (requiere un modelo con visión 🖼️)';
+    if (!allVision && appState.image) {
+        clearAttachedImage();
+    }
+}
+
+// ---------- Toggle de modo (Arena vs 1 sola IA) ----------
+const modeArenaBtn = document.getElementById('mode-arena-btn');
+const modeSingleBtn = document.getElementById('mode-single-btn');
+const singleProviderToggle = document.getElementById('single-provider-toggle');
+const singleProviderOrBtn = document.getElementById('single-provider-or-btn');
+const singleProviderNvBtn = document.getElementById('single-provider-nv-btn');
+const orPickerEl = document.getElementById('or-picker');
+const nvPickerEl = document.getElementById('nv-picker');
+
+function applyModeUI() {
+    const isSingle = appState.mode === 'single';
+    modeArenaBtn.classList.toggle('is-active', !isSingle);
+    modeSingleBtn.classList.toggle('is-active', isSingle);
+    singleProviderToggle.classList.toggle('hidden', !isSingle);
+
+    if (isSingle) {
+        orPickerEl.classList.toggle('hidden', appState.singleProvider !== 'openrouter');
+        nvPickerEl.classList.toggle('hidden', appState.singleProvider !== 'nvidia');
+        singleProviderOrBtn.classList.toggle('is-active', appState.singleProvider === 'openrouter');
+        singleProviderNvBtn.classList.toggle('is-active', appState.singleProvider === 'nvidia');
+    } else {
+        orPickerEl.classList.remove('hidden');
+        nvPickerEl.classList.remove('hidden');
+    }
+    refreshToggles();
+}
+
+modeArenaBtn.addEventListener('click', () => { appState.mode = 'arena'; applyModeUI(); });
+modeSingleBtn.addEventListener('click', () => { appState.mode = 'single'; applyModeUI(); });
+singleProviderOrBtn.addEventListener('click', () => { appState.singleProvider = 'openrouter'; applyModeUI(); });
+singleProviderNvBtn.addEventListener('click', () => { appState.singleProvider = 'nvidia'; applyModeUI(); });
+
+document.getElementById('agent-mode-checkbox').addEventListener('change', (e) => {
+    appState.agentMode = e.target.checked;
+});
+
+applyModeUI();
+
+// ---------- Adjuntar imagen ----------
+const attachBtn = document.getElementById('attach-btn');
+const attachInput = document.getElementById('attach-input');
+const imagePreviewRow = document.getElementById('image-preview-row');
+const imagePreviewThumb = document.getElementById('image-preview-thumb');
+
+attachBtn.addEventListener('click', () => attachInput.click());
+
+attachInput.addEventListener('change', () => {
+    const file = attachInput.files[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = () => {
+        appState.image = { dataUrl: reader.result, name: file.name };
+        imagePreviewThumb.src = reader.result;
+        imagePreviewRow.classList.remove('hidden');
+    };
+    reader.readAsDataURL(file);
+});
+
+document.getElementById('image-preview-remove').addEventListener('click', clearAttachedImage);
+
+function clearAttachedImage() {
+    appState.image = null;
+    attachInput.value = '';
+    imagePreviewRow.classList.add('hidden');
+}
+
+// ---------- Chat ----------
 const chatForm = document.getElementById('chat-form');
 const promptInput = document.getElementById('prompt-input');
 const sendBtn = document.getElementById('send-btn');
@@ -251,49 +352,76 @@ promptInput.addEventListener('keydown', (event) => {
     }
 });
 
+function buildContent(text, model) {
+    if (appState.image && model.vision) {
+        return [
+            { type: 'text', text },
+            { type: 'image_url', image_url: { url: appState.image.dataUrl } }
+        ];
+    }
+    return text;
+}
+
+function responseCardHTML({ id, providerLabel, providerIcon, borderClass, headerBorderClass, modelName, agentBadge }) {
+    return `
+        <div class="bg-gray-900 rounded-xl border ${borderClass} flex flex-col">
+            <div class="bg-gray-950/50 border-b ${headerBorderClass} p-2 flex justify-between items-center gap-2">
+                <span class="text-xs font-semibold flex items-center gap-1"><i class="ph ${providerIcon}"></i> ${providerLabel} ${agentBadge}</span>
+                <span class="text-[10px] text-gray-400 px-2 bg-gray-800 rounded truncate">${escapeHTML(modelName)}</span>
+            </div>
+            <div id="${id}" class="p-4 text-sm prose text-gray-300">
+                <i class="ph ph-spinner-gap animate-spin"></i> Pensando...
+            </div>
+        </div>
+    `;
+}
+
 async function handleSend(e) {
     e.preventDefault();
     const text = promptInput.value.trim();
     if (!text) return;
 
+    const selections = activeSelections();
+    const usingImage = Boolean(appState.image);
+    const usingAgent = appState.agentMode;
+
     promptInput.value = '';
     document.getElementById('welcome-screen')?.remove();
 
     const entryId = Date.now().toString();
-    const orModel = orPicker.getValue();
-    const nvModel = nvPicker.getValue();
-    const orModelName = orPicker.getName();
-    const nvModelName = nvPicker.getName();
-
     const chatHistory = document.getElementById('chat-history');
+
+    const imageHTML = usingImage ? `<img src="${appState.image.dataUrl}" class="attached-image-thumb" alt="Imagen adjunta">` : '';
+
+    const agentBadgeHTML = usingAgent ? '<span class="agent-badge"><i class="ph ph-brain"></i> Agente</span>' : '';
+
+    const panesHTML = selections.map((sel, i) => {
+        const isOpenRouter = sel.provider === 'openrouter';
+        return responseCardHTML({
+            id: `resp-${entryId}-${i}`,
+            providerLabel: isOpenRouter ? 'OpenRouter' : 'Nvidia NIM',
+            providerIcon: isOpenRouter ? 'ph-robot' : 'ph-cpu',
+            borderClass: isOpenRouter ? 'border-indigo-900/40' : 'border-green-900/40',
+            headerBorderClass: isOpenRouter ? 'border-indigo-900/30' : 'border-green-900/30',
+            modelName: sel.model.label,
+            agentBadge: agentBadgeHTML
+        });
+    }).join('');
+
+    const gridClass = selections.length > 1 ? 'grid grid-cols-1 md:grid-cols-2 gap-4' : 'grid grid-cols-1 gap-4 max-w-2xl mx-auto w-full';
+
     const messageHTML = `
         <div id="entry-${entryId}" class="space-y-4 mb-8 response-card">
             <div class="flex justify-end">
-                <div class="bg-gray-800 px-5 py-3 rounded-2xl rounded-tr-sm max-w-[90%] md:max-w-2xl border border-gray-700 flex items-start gap-3">
-                    <div class="flex-1 text-sm md:text-base whitespace-pre-wrap">${escapeHTML(text)}</div>
-                    <i class="ph ph-user text-xl text-gray-400 mt-0.5"></i>
+                <div class="bg-gray-800 px-5 py-3 rounded-2xl rounded-tr-sm max-w-[90%] md:max-w-2xl border border-gray-700 flex flex-col items-end gap-2">
+                    <div class="flex items-start gap-3 w-full">
+                        <div class="flex-1 text-sm md:text-base whitespace-pre-wrap">${escapeHTML(text)}</div>
+                        <i class="ph ph-user text-xl text-gray-400 mt-0.5"></i>
+                    </div>
+                    ${imageHTML}
                 </div>
             </div>
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div class="bg-gray-900 rounded-xl border border-indigo-900/40 flex flex-col">
-                    <div class="bg-gray-950/50 border-b border-indigo-900/30 p-2 flex justify-between items-center">
-                        <span class="text-xs text-indigo-300 font-semibold"><i class="ph ph-robot"></i> OpenRouter</span>
-                        <span class="text-[10px] text-gray-400 px-2 bg-gray-800 rounded truncate">${escapeHTML(orModelName)}</span>
-                    </div>
-                    <div id="or-response-${entryId}" class="p-4 text-sm prose text-gray-300">
-                        <i class="ph ph-spinner-gap animate-spin"></i> Pensando...
-                    </div>
-                </div>
-                <div class="bg-gray-900 rounded-xl border border-green-900/40 flex flex-col">
-                    <div class="bg-gray-950/50 border-b border-green-900/30 p-2 flex justify-between items-center">
-                        <span class="text-xs text-green-300 font-semibold"><i class="ph ph-cpu"></i> Nvidia NIM</span>
-                        <span class="text-[10px] text-gray-400 px-2 bg-gray-800 rounded truncate">${escapeHTML(nvModelName)}</span>
-                    </div>
-                    <div id="nv-response-${entryId}" class="p-4 text-sm prose text-gray-300">
-                        <i class="ph ph-spinner-gap animate-spin"></i> Procesando...
-                    </div>
-                </div>
-            </div>
+            <div class="${gridClass}">${panesHTML}</div>
         </div>
     `;
 
@@ -301,20 +429,28 @@ async function handleSend(e) {
     scrollToBottom();
 
     sendBtn.disabled = true;
-    await Promise.allSettled([
-        callBackend(text, 'openrouter', orModel, `or-response-${entryId}`),
-        callBackend(text, 'nvidia', nvModel, `nv-response-${entryId}`)
-    ]);
+    await Promise.allSettled(selections.map((sel, i) =>
+        callBackend({
+            text, provider: sel.provider, model: sel.model,
+            agent: usingAgent, elementId: `resp-${entryId}-${i}`
+        })
+    ));
     sendBtn.disabled = false;
+    clearAttachedImage();
 }
 
-async function callBackend(message, provider, model, elementId) {
+async function callBackend({ text, provider, model, agent, elementId }) {
     const responseDiv = document.getElementById(elementId);
     try {
         const res = await fetch('/api/chat', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ message, provider, model })
+            body: JSON.stringify({
+                provider,
+                model: model.id,
+                content: buildContent(text, model),
+                system: agent ? AGENT_SYSTEM_PROMPT : undefined
+            })
         });
 
         const contentType = res.headers.get('content-type') || '';

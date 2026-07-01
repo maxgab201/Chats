@@ -13,41 +13,66 @@
 <body class="bg-gray-950 text-gray-100 font-sans flex flex-col h-screen overflow-hidden">
 
     <header class="bg-gray-900 border-b border-gray-800 p-4 shrink-0 shadow-md relative z-20">
-        <div class="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center gap-4">
-            <div class="flex items-center gap-3 w-full md:w-auto">
-                <div class="p-2 bg-gradient-to-br from-indigo-500 to-green-500 rounded-lg">
-                    <i class="ph ph-cpu text-2xl text-white"></i>
+        <div class="max-w-7xl mx-auto flex flex-col gap-3">
+            <div class="flex flex-col md:flex-row justify-between items-center gap-4">
+                <div class="flex items-center gap-3 w-full md:w-auto">
+                    <div class="p-2 bg-gradient-to-br from-indigo-500 to-green-500 rounded-lg">
+                        <i class="ph ph-cpu text-2xl text-white"></i>
+                    </div>
+                    <div>
+                        <h1 class="text-xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-indigo-400 to-green-400">
+                            Arena de IAs
+                        </h1>
+                        <p class="text-[10px] text-gray-400">100% gratis · OpenRouter + NVIDIA NIM</p>
+                    </div>
                 </div>
-                <div>
-                    <h1 class="text-xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-indigo-400 to-green-400">
-                        Arena de IAs
-                    </h1>
-                    <p class="text-[10px] text-gray-400">100% gratis · OpenRouter + NVIDIA NIM</p>
+
+                <!-- Modo: Arena (2 IAs) vs Solo 1 IA -->
+                <div id="mode-toggle" class="flex bg-gray-800 rounded-lg p-1 border border-gray-700 text-xs shrink-0">
+                    <button type="button" id="mode-arena-btn" class="mode-btn is-active px-3 py-1.5 rounded-md font-semibold">
+                        <i class="ph ph-swords"></i> Arena (2 IAs)
+                    </button>
+                    <button type="button" id="mode-single-btn" class="mode-btn px-3 py-1.5 rounded-md font-semibold">
+                        <i class="ph ph-user"></i> 1 sola IA
+                    </button>
+                </div>
+
+                <!-- Selectores de modelos (combobox con buscador, ver script.js) -->
+                <div class="flex flex-col sm:flex-row gap-2 w-full md:w-auto text-sm">
+                    <div id="single-provider-toggle" class="hidden flex bg-gray-800 rounded-lg p-1 border border-gray-700 text-xs shrink-0">
+                        <button type="button" id="single-provider-or-btn" class="mode-btn is-active px-3 py-1.5 rounded-md font-semibold">OpenRouter</button>
+                        <button type="button" id="single-provider-nv-btn" class="mode-btn px-3 py-1.5 rounded-md font-semibold">NVIDIA NIM</button>
+                    </div>
+
+                    <div id="or-picker" class="model-picker relative flex items-center gap-2 bg-gray-800 px-3 py-1.5 rounded-lg border border-indigo-900/50 w-full sm:w-64">
+                        <i class="ph ph-robot text-indigo-400 shrink-0"></i>
+                        <button type="button" id="or-picker-btn" class="flex-1 flex items-center justify-between gap-2 bg-transparent text-gray-200 text-left outline-none min-w-0">
+                            <span id="or-picker-label" class="truncate"></span>
+                            <i class="ph ph-caret-down text-xs text-gray-400 shrink-0"></i>
+                        </button>
+                    </div>
+
+                    <div id="nv-picker" class="model-picker relative flex items-center gap-2 bg-gray-800 px-3 py-1.5 rounded-lg border border-green-900/50 w-full sm:w-64">
+                        <i class="ph ph-cpu text-green-400 shrink-0"></i>
+                        <button type="button" id="nv-picker-btn" class="flex-1 flex items-center justify-between gap-2 bg-transparent text-gray-200 text-left outline-none min-w-0">
+                            <span id="nv-picker-label" class="truncate"></span>
+                            <i class="ph ph-caret-down text-xs text-gray-400 shrink-0"></i>
+                        </button>
+                    </div>
                 </div>
             </div>
 
-            <!-- Selectores de modelos (combobox con buscador, ver script.js) -->
-            <div class="flex flex-col sm:flex-row gap-2 w-full md:w-auto text-sm">
-                <div id="or-picker" class="model-picker relative flex items-center gap-2 bg-gray-800 px-3 py-1.5 rounded-lg border border-indigo-900/50 w-full sm:w-64">
-                    <i class="ph ph-robot text-indigo-400 shrink-0"></i>
-                    <button type="button" id="or-picker-btn" class="flex-1 flex items-center justify-between gap-2 bg-transparent text-gray-200 text-left outline-none min-w-0">
-                        <span id="or-picker-label" class="truncate"></span>
-                        <i class="ph ph-caret-down text-xs text-gray-400 shrink-0"></i>
-                    </button>
-                </div>
-
-                <div id="nv-picker" class="model-picker relative flex items-center gap-2 bg-gray-800 px-3 py-1.5 rounded-lg border border-green-900/50 w-full sm:w-64">
-                    <i class="ph ph-cpu text-green-400 shrink-0"></i>
-                    <button type="button" id="nv-picker-btn" class="flex-1 flex items-center justify-between gap-2 bg-transparent text-gray-200 text-left outline-none min-w-0">
-                        <span id="nv-picker-label" class="truncate"></span>
-                        <i class="ph ph-caret-down text-xs text-gray-400 shrink-0"></i>
-                    </button>
-                </div>
+            <div class="flex items-center justify-end gap-2">
+                <label id="agent-mode-wrap" class="flex items-center gap-1.5 text-xs text-gray-400 cursor-pointer select-none" title="Disponible solo para modelos top">
+                    <input type="checkbox" id="agent-mode-checkbox" class="accent-indigo-500">
+                    <i class="ph ph-brain text-amber-400"></i> Modo Agente
+                    <span id="agent-mode-hint" class="text-gray-600">(elegí un modelo top)</span>
+                </label>
             </div>
         </div>
     </header>
 
-    <main id="chat-container" class="flex-1 overflow-y-auto p-4 md:p-6 pb-32">
+    <main id="chat-container" class="flex-1 overflow-y-auto p-4 md:p-6 pb-36">
         <div id="chat-history" class="max-w-7xl mx-auto space-y-8">
             <div id="welcome-screen" class="flex flex-col items-center justify-center text-center mt-10 md:mt-20 text-gray-500 space-y-4">
                 <div class="flex gap-4">
@@ -57,13 +82,27 @@
                 <h2 class="text-xl font-bold text-gray-400">Arena Lista y Segura</h2>
                 <p class="max-w-md text-xs md:text-sm px-4">
                     Tu app usa el backend serverless de Vercel: sin errores de CORS y con tus claves de API ocultas en las variables de entorno.
+                    Probá el modo Agente con un modelo top, o subí una imagen a un modelo con visión.
                 </p>
             </div>
         </div>
     </main>
 
     <div class="bg-gray-900/90 backdrop-blur-md border-t border-gray-800 p-4 absolute bottom-0 w-full z-20">
+        <div id="image-preview-row" class="hidden max-w-4xl mx-auto mb-2 flex items-center gap-2">
+            <img id="image-preview-thumb" class="h-14 w-14 object-cover rounded-lg border border-gray-700" alt="Imagen adjunta">
+            <button type="button" id="image-preview-remove" class="text-xs text-red-400 hover:text-red-300">
+                <i class="ph ph-x-circle"></i> Quitar imagen
+            </button>
+        </div>
         <form id="chat-form" class="max-w-4xl mx-auto relative flex items-end gap-2">
+            <input type="file" id="attach-input" accept="image/*" class="hidden">
+            <button type="button" id="attach-btn" disabled
+                class="p-2.5 mb-0.5 bg-gray-800 border border-gray-700 hover:bg-gray-700 disabled:opacity-40 disabled:cursor-not-allowed text-gray-300 rounded-xl transition-colors shrink-0"
+                title="Adjuntar imagen (requiere un modelo con visión)">
+                <i class="ph ph-image text-lg"></i>
+            </button>
+
             <textarea id="prompt-input" rows="2" placeholder="Probá un problema de las Olimpiadas OMA acá..."
                 class="w-full bg-gray-950 border border-gray-700 rounded-2xl py-3 px-4 pr-14 text-sm md:text-base text-gray-100 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-indigo-500 resize-none"></textarea>
 

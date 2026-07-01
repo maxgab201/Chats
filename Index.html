@@ -1,0 +1,344 @@
+```html
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Arena IA Gratuita - OpenRouter vs Nvidia</title>
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Phosphor Icons -->
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+    
+    <!-- Marked.js para formatear Markdown -->
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+
+    <style>
+        /* Estilos personalizados para el markdown */
+        .prose pre { background-color: #1f2937; padding: 1rem; border-radius: 0.5rem; overflow-x: auto; margin-top: 0.5rem; margin-bottom: 0.5rem; }
+        .prose code { color: #818cf8; font-family: monospace; }
+        .prose p { margin-bottom: 0.75rem; }
+        .prose ul { list-style-type: disc; padding-left: 1.5rem; margin-bottom: 0.75rem; }
+        .prose ol { list-style-type: decimal; padding-left: 1.5rem; margin-bottom: 0.75rem; }
+        .prose h1, .prose h2, .prose h3 { font-weight: bold; margin-top: 1rem; margin-bottom: 0.5rem; color: #e5e7eb; }
+        .prose strong { color: #f3f4f6; }
+        
+        /* Ocultar barra de scroll pero permitir scrolleo */
+        ::-webkit-scrollbar { width: 6px; height: 6px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: #374151; border-radius: 10px; }
+        ::-webkit-scrollbar-thumb:hover { background: #4b5563; }
+    </style>
+</head>
+<body class="bg-gray-950 text-gray-100 font-sans flex flex-col h-screen overflow-hidden">
+
+    <!-- HEADER -->
+    <header class="bg-gray-900 border-b border-gray-800 p-4 shrink-0 shadow-md relative z-20">
+        <div class="max-w-7xl mx-auto flex flex-row justify-between items-center gap-4">
+            <div class="flex items-center gap-3">
+                <div class="p-2 bg-gradient-to-br from-indigo-500 to-green-500 rounded-lg">
+                    <i class="ph ph-cpu text-2xl text-white"></i>
+                </div>
+                <div>
+                    <h1 class="text-lg md:text-xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-indigo-400 to-green-400 leading-tight">
+                        Arena de IA
+                    </h1>
+                    <p class="text-[10px] md:text-xs text-gray-400">OpenRouter vs Nvidia</p>
+                </div>
+            </div>
+
+            <button onclick="toggleSettings()" class="flex items-center gap-2 px-3 py-2 bg-gray-800 text-gray-300 hover:bg-gray-700 rounded-lg transition-colors text-sm font-medium">
+                <i class="ph ph-gear text-lg"></i>
+                <span class="hidden md:inline">Ajustes / APIs</span>
+            </button>
+        </div>
+    </header>
+
+    <!-- SETTINGS PANEL -->
+    <div id="settings-panel" class="hidden bg-gray-900 border-b border-gray-800 p-4 shadow-inner shrink-0 z-10 relative">
+        <div class="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-6">
+            <!-- OpenRouter Settings -->
+            <div class="space-y-3">
+                <div class="flex items-center gap-2 text-indigo-400">
+                    <i class="ph ph-robot text-xl"></i>
+                    <h2 class="font-semibold text-sm md:text-base">OpenRouter (Gratis)</h2>
+                </div>
+                <div>
+                    <label class="block text-xs text-gray-400 mb-1">API Key</label>
+                    <input type="password" id="or-key" placeholder="sk-or-v1-..." class="w-full bg-gray-950 border border-gray-700 rounded-md p-2 text-sm focus:ring-2 focus:ring-indigo-500 outline-none transition-all">
+                </div>
+                <div>
+                    <label class="block text-xs text-gray-400 mb-1">Modelo</label>
+                    <select id="or-model" class="w-full bg-gray-950 border border-gray-700 rounded-md p-2 text-sm focus:ring-2 focus:ring-indigo-500 outline-none text-white">
+                        <option value="google/gemini-2.5-flash-free">Gemini 2.5 Flash (Google)</option>
+                        <option value="meta-llama/llama-3.1-8b-instruct:free">Llama 3.1 8B (Meta)</option>
+                        <option value="mistralai/mistral-7b-instruct:free">Mistral 7B (Mistral)</option>
+                    </select>
+                </div>
+            </div>
+
+            <!-- Nvidia Settings -->
+            <div class="space-y-3">
+                <div class="flex items-center gap-2 text-green-400">
+                    <i class="ph ph-cpu text-xl"></i>
+                    <h2 class="font-semibold text-sm md:text-base">Nvidia NIM (Gratis)</h2>
+                </div>
+                <div>
+                    <label class="block text-xs text-gray-400 mb-1">API Key</label>
+                    <input type="password" id="nv-key" placeholder="nvapi-..." class="w-full bg-gray-950 border border-gray-700 rounded-md p-2 text-sm focus:ring-2 focus:ring-green-500 outline-none transition-all">
+                </div>
+                <div>
+                    <label class="block text-xs text-gray-400 mb-1">Modelo</label>
+                    <select id="nv-model" class="w-full bg-gray-950 border border-gray-700 rounded-md p-2 text-sm focus:ring-2 focus:ring-green-500 outline-none text-white">
+                        <option value="meta/llama-3.1-8b-instruct">Llama 3.1 8B (Nvidia NIM)</option>
+                        <option value="meta/llama-3.1-70b-instruct">Llama 3.1 70B (Nvidia NIM)</option>
+                        <option value="nvidia/nemotron-4-340b-instruct">Nemotron 4 340B (Nvidia)</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+        
+        <div class="max-w-7xl mx-auto mt-4 pt-4 border-t border-gray-800 flex justify-end">
+            <button onclick="saveSettings()" class="bg-gray-100 text-gray-900 px-6 py-2 rounded-lg text-sm font-medium hover:bg-white transition-colors">
+                Guardar y Cerrar
+            </button>
+        </div>
+    </div>
+
+    <!-- CHAT AREA -->
+    <main id="chat-container" class="flex-1 overflow-y-auto p-4 md:p-6 pb-32">
+        <div id="chat-history" class="max-w-7xl mx-auto space-y-8">
+            <!-- Pantalla inicial de bienvenida -->
+            <div id="welcome-screen" class="flex flex-col items-center justify-center text-center mt-10 md:mt-20 text-gray-500 space-y-4">
+                <div class="flex gap-4">
+                    <i class="ph ph-robot text-5xl text-indigo-900"></i>
+                    <i class="ph ph-cpu text-5xl text-green-900"></i>
+                </div>
+                <h2 class="text-xl md:text-2xl font-bold text-gray-400">Arena Lista</h2>
+                <p class="max-w-md text-xs md:text-sm px-4">
+                    Escribí un mensaje abajo. Dos modelos generarán respuestas al mismo tiempo. <br><br>
+                    <span class="text-yellow-500 flex items-center justify-center gap-1"><i class="ph ph-warning-circle"></i> Recordá configurar tus API Keys en la ruedita.</span>
+                </p>
+            </div>
+        </div>
+    </main>
+
+    <!-- INPUT AREA -->
+    <div class="bg-gray-900/90 backdrop-blur-md border-t border-gray-800 p-4 absolute bottom-0 w-full z-20">
+        <form id="chat-form" onsubmit="handleSend(event)" class="max-w-4xl mx-auto relative flex items-end gap-2">
+            <textarea id="prompt-input" rows="2" placeholder="Mandale un problema matemático o de código..." 
+                class="w-full bg-gray-950 border border-gray-700 rounded-2xl py-3 px-4 pr-14 text-sm md:text-base text-gray-100 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-indigo-500 resize-none transition-all"
+                onkeydown="if(event.key === 'Enter' && !event.shiftKey) { event.preventDefault(); handleSend(event); }"></textarea>
+            
+            <button type="submit" id="send-btn" class="absolute right-2 bottom-2 p-2.5 bg-indigo-600 hover:bg-indigo-500 text-white rounded-xl transition-colors disabled:opacity-50 disabled:hover:bg-indigo-600 flex items-center justify-center">
+                <i class="ph ph-paper-plane-right text-lg"></i>
+            </button>
+        </form>
+    </div>
+
+    <!-- JAVASCRIPT LOGIC -->
+    <script>
+        // Cargar ajustes al inicio
+        document.addEventListener('DOMContentLoaded', () => {
+            const orKey = localStorage.getItem('orKey') || '';
+            const nvKey = localStorage.getItem('nvKey') || '';
+            const orModel = localStorage.getItem('orModel') || 'google/gemini-2.5-flash-free';
+            const nvModel = localStorage.getItem('nvModel') || 'meta/llama-3.1-8b-instruct';
+
+            document.getElementById('or-key').value = orKey;
+            document.getElementById('nv-key').value = nvKey;
+            document.getElementById('or-model').value = orModel;
+            document.getElementById('nv-model').value = nvModel;
+
+            if (!orKey || !nvKey) {
+                toggleSettings(true);
+            }
+        });
+
+        function toggleSettings(forceShow = false) {
+            const panel = document.getElementById('settings-panel');
+            if (forceShow || panel.classList.contains('hidden')) {
+                panel.classList.remove('hidden');
+            } else {
+                panel.classList.add('hidden');
+            }
+        }
+
+        function saveSettings() {
+            localStorage.setItem('orKey', document.getElementById('or-key').value.trim());
+            localStorage.setItem('nvKey', document.getElementById('nv-key').value.trim());
+            localStorage.setItem('orModel', document.getElementById('or-model').value);
+            localStorage.setItem('nvModel', document.getElementById('nv-model').value);
+            toggleSettings(false);
+        }
+
+        async function handleSend(e) {
+            e.preventDefault();
+            const input = document.getElementById('prompt-input');
+            const text = input.value.trim();
+            if (!text) return;
+
+            const orKey = localStorage.getItem('orKey');
+            const nvKey = localStorage.getItem('nvKey');
+
+            if (!orKey || !nvKey) {
+                alert("Por favor, ingresá ambas API Keys en los ajustes.");
+                toggleSettings(true);
+                return;
+            }
+
+            input.value = '';
+            document.getElementById('welcome-screen')?.remove();
+
+            const entryId = Date.now().toString();
+            const orModelName = document.getElementById('or-model').options[document.getElementById('or-model').selectedIndex].text;
+            const nvModelName = document.getElementById('nv-model').options[document.getElementById('nv-model').selectedIndex].text;
+
+            // Inyectar HTML del nuevo mensaje
+            const chatHistory = document.getElementById('chat-history');
+            const messageHTML = `
+                <div id="entry-${entryId}" class="space-y-4 animate-fade-in mb-8">
+                    <!-- Burbuja Usuario -->
+                    <div class="flex justify-end">
+                        <div class="bg-gray-800 px-5 py-3 rounded-2xl rounded-tr-sm max-w-[90%] md:max-w-2xl border border-gray-700 shadow-sm flex items-start gap-3">
+                            <div class="flex-1 text-sm md:text-base whitespace-pre-wrap">${escapeHTML(text)}</div>
+                            <i class="ph ph-user text-xl text-gray-400 shrink-0 mt-0.5"></i>
+                        </div>
+                    </div>
+
+                    <!-- Layout IAs -->
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        
+                        <!-- Panel OpenRouter -->
+                        <div class="bg-gray-900 rounded-xl border border-indigo-900/40 overflow-hidden flex flex-col shadow-lg">
+                            <div class="bg-gray-950/50 border-b border-indigo-900/30 p-2 md:p-3 flex items-center justify-between">
+                                <div class="flex items-center gap-2">
+                                    <div class="p-1.5 bg-indigo-500/20 rounded-md">
+                                        <i class="ph ph-robot text-indigo-400"></i>
+                                    </div>
+                                    <span class="text-xs font-semibold text-indigo-300">OpenRouter</span>
+                                </div>
+                                <span class="text-[10px] text-gray-400 px-2 py-1 bg-gray-900 rounded-full border border-gray-800 truncate max-w-[120px]">${orModelName}</span>
+                            </div>
+                            <div id="or-response-${entryId}" class="p-4 overflow-x-auto text-sm text-gray-300 prose">
+                                <div class="flex items-center gap-2 text-indigo-400 animate-pulse text-xs">
+                                    <i class="ph ph-spinner-gap animate-spin text-lg"></i> Pensando...
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Panel Nvidia -->
+                        <div class="bg-gray-900 rounded-xl border border-green-900/40 overflow-hidden flex flex-col shadow-lg">
+                            <div class="bg-gray-950/50 border-b border-green-900/30 p-2 md:p-3 flex items-center justify-between">
+                                <div class="flex items-center gap-2">
+                                    <div class="p-1.5 bg-green-500/20 rounded-md">
+                                        <i class="ph ph-cpu text-green-400"></i>
+                                    </div>
+                                    <span class="text-xs font-semibold text-green-300">Nvidia NIM</span>
+                                </div>
+                                <span class="text-[10px] text-gray-400 px-2 py-1 bg-gray-900 rounded-full border border-gray-800 truncate max-w-[120px]">${nvModelName}</span>
+                            </div>
+                            <div id="nv-response-${entryId}" class="p-4 overflow-x-auto text-sm text-gray-300 prose">
+                                <div class="flex items-center gap-2 text-green-400 animate-pulse text-xs">
+                                    <i class="ph ph-spinner-gap animate-spin text-lg"></i> Procesando...
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            `;
+            
+            chatHistory.insertAdjacentHTML('beforeend', messageHTML);
+            scrollToBottom();
+
+            // Llamadas paralelas
+            fetchOpenRouter(text, entryId);
+            fetchNvidia(text, entryId);
+        }
+
+        async function fetchOpenRouter(text, id) {
+            const orKey = localStorage.getItem('orKey');
+            const model = localStorage.getItem('orModel');
+            const responseDiv = document.getElementById(`or-response-${id}`);
+
+            try {
+                const response = await fetch('https://openrouter.ai/api/v1/chat/completions', {
+                    method: 'POST',
+                    headers: {
+                        'Authorization': `Bearer ${orKey}`,
+                        'Content-Type': 'application/json',
+                        'HTTP-Referer': window.location.href,
+                        'X-Title': 'Comparador IA'
+                    },
+                    body: JSON.stringify({
+                        model: model,
+                        messages: [{ role: 'user', content: text }],
+                    })
+                });
+
+                if (!response.ok) throw new Error(`Error ${response.status}: Revisá tu API Key`);
+                const data = await response.json();
+                const aiText = data.choices[0]?.message?.content || "Sin respuesta";
+                
+                responseDiv.innerHTML = marked.parse(aiText);
+            } catch (error) {
+                responseDiv.innerHTML = `<div class="text-red-400 text-xs flex items-center gap-1"><i class="ph ph-warning-circle"></i> ${error.message}</div>`;
+            }
+            scrollToBottom();
+        }
+
+        async function fetchNvidia(text, id) {
+            const nvKey = localStorage.getItem('nvKey');
+            const model = localStorage.getItem('nvModel');
+            const responseDiv = document.getElementById(`nv-response-${id}`);
+
+            try {
+                const response = await fetch('https://integrate.api.nvidia.com/v1/chat/completions', {
+                    method: 'POST',
+                    headers: {
+                        'Authorization': `Bearer ${nvKey}`,
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        model: model,
+                        messages: [{ role: 'user', content: text }],
+                        temperature: 0.7,
+                        max_tokens: 1024,
+                    })
+                });
+
+                if (!response.ok) throw new Error(`Error ${response.status}: Revisá tu API Key de Nvidia`);
+                const data = await response.json();
+                const aiText = data.choices[0]?.message?.content || "Sin respuesta";
+                
+                responseDiv.innerHTML = marked.parse(aiText);
+            } catch (error) {
+                responseDiv.innerHTML = `<div class="text-red-400 text-xs flex items-center gap-1"><i class="ph ph-warning-circle"></i> ${error.message}</div>`;
+            }
+            scrollToBottom();
+        }
+
+        function scrollToBottom() {
+            const container = document.getElementById('chat-container');
+            container.scrollTo({ top: container.scrollHeight, behavior: 'smooth' });
+        }
+
+        function escapeHTML(str) {
+            return str.replace(/[&<>'"]/g, 
+                tag => ({
+                    '&': '&amp;',
+                    '<': '&lt;',
+                    '>': '&gt;',
+                    "'": '&#39;',
+                    '"': '&quot;'
+                }[tag])
+            );
+        }
+    </script>
+</body>
+</html>
+
+```

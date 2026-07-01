@@ -1,25 +1,14 @@
-```html
 <!DOCTYPE html>
 <html lang="es">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Arena IA Gratuita - OpenRouter vs Nvidia</title>
+    <title>Arena de IAs Gratuita - OpenRouter vs Nvidia NIM</title>
+    <meta name="description" content="Compará respuestas de modelos de IA gratuitos de OpenRouter y NVIDIA NIM en tiempo real.">
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://unpkg.com/@phosphor-icons/web"></script>
     <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
-
-    <style>
-        .prose pre { background-color: #1f2937; padding: 1rem; border-radius: 0.5rem; overflow-x: auto; margin: 0.5rem 0; }
-        .prose code { color: #818cf8; font-family: monospace; }
-        .prose p { margin-bottom: 0.75rem; }
-        .prose ul { list-style-type: disc; padding-left: 1.5rem; margin-bottom: 0.75rem; }
-        .prose ol { list-style-type: decimal; padding-left: 1.5rem; margin-bottom: 0.75rem; }
-        .prose h1, .prose h2, .prose h3 { font-weight: bold; margin-top: 1rem; margin-bottom: 0.5rem; color: #e5e7eb; }
-        ::-webkit-scrollbar { width: 6px; height: 6px; }
-        ::-webkit-scrollbar-track { background: transparent; }
-        ::-webkit-scrollbar-thumb { background: #374151; border-radius: 10px; }
-    </style>
+    <link rel="stylesheet" href="style.css">
 </head>
 <body class="bg-gray-950 text-gray-100 font-sans flex flex-col h-screen overflow-hidden">
 
@@ -33,7 +22,7 @@
                     <h1 class="text-xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-indigo-400 to-green-400">
                         Arena de IAs
                     </h1>
-                    <p class="text-[10px] text-gray-400">Powered by Vercel Serverless</p>
+                    <p class="text-[10px] text-gray-400">100% gratis · OpenRouter + NVIDIA NIM</p>
                 </div>
             </div>
 
@@ -41,41 +30,35 @@
             <div class="flex flex-col sm:flex-row gap-2 w-full md:w-auto text-sm">
                 <div class="flex items-center gap-2 bg-gray-800 px-3 py-1.5 rounded-lg border border-indigo-900/50">
                     <i class="ph ph-robot text-indigo-400"></i>
-                    <select id="or-model" class="bg-transparent text-gray-200 outline-none w-full md:w-48 truncate">
+                    <select id="or-model" class="bg-transparent text-gray-200 outline-none w-full md:w-52 truncate">
                         <optgroup label="Auto-Router Inteligente">
                             <option value="openrouter/free">Elegir mejor gratis automáticamente</option>
                         </optgroup>
-                        <optgroup label="Modelos Gratuitos">
-                            <option value="meta-llama/llama-3.1-8b-instruct:free">Llama 3.1 8B (Meta)</option>
-                            <option value="mistralai/mistral-7b-instruct:free">Mistral 7B (Mistral)</option>
-                            <option value="google/gemma-2-9b-it:free">Gemma 2 9B (Google)</option>
-                            <option value="qwen/qwen-2-7b-instruct:free">Qwen 2 7B (Alibaba)</option>
-                            <option value="microsoft/phi-3-mini-128k-instruct:free">Phi-3 Mini 128K (Microsoft)</option>
-                            <option value="huggingfaceh4/zephyr-7b-beta:free">Zephyr 7B Beta</option>
-                            <option value="openchat/openchat-7b:free">OpenChat 7B</option>
-                            <option value="undi95/toppy-m-7b:free">Toppy M 7B</option>
-                            <option value="gryphe/mythomax-l2-13b:free">MythoMax L2 13B</option>
-                            <option value="cognitivecomputations/dolphin-mixtral-8x7b:free">Dolphin Mixtral 8x7b</option>
-                            <option value="nousresearch/nous-capybara-7b:free">Nous Capybara 7B</option>
-                            <option value="open-orca/mistral-7b-openorca:free">Mistral OpenOrca 7B</option>
+                        <optgroup label="Modelos Gratuitos (:free)">
+                            <option value="nvidia/nemotron-3-nano-30b-a3b:free">Nemotron 3 Nano 30B (Nvidia)</option>
+                            <option value="nvidia/nemotron-nano-9b-v2:free">Nemotron Nano 9B v2 (Nvidia)</option>
+                            <option value="nvidia/nemotron-3-super-120b-a12b:free">Nemotron 3 Super 120B (Nvidia)</option>
+                            <option value="openai/gpt-oss-20b:free">GPT-OSS 20B (OpenAI)</option>
+                            <option value="openai/gpt-oss-120b:free">GPT-OSS 120B (OpenAI)</option>
+                            <option value="google/gemma-4-31b-it:free">Gemma 4 31B (Google)</option>
+                            <option value="google/gemma-4-26b-a4b-it:free">Gemma 4 26B A4B (Google)</option>
                         </optgroup>
                     </select>
                 </div>
 
                 <div class="flex items-center gap-2 bg-gray-800 px-3 py-1.5 rounded-lg border border-green-900/50">
                     <i class="ph ph-cpu text-green-400"></i>
-                    <select id="nv-model" class="bg-transparent text-gray-200 outline-none w-full md:w-48 truncate">
+                    <select id="nv-model" class="bg-transparent text-gray-200 outline-none w-full md:w-52 truncate">
                         <option value="meta/llama-3.1-8b-instruct">Llama 3.1 8B (Meta)</option>
                         <option value="meta/llama-3.1-70b-instruct">Llama 3.1 70B (Meta)</option>
-                        <option value="nvidia/nemotron-4-340b-instruct">Nemotron 4 340B (Nvidia)</option>
-                        <option value="nvidia/nemotron-3-nano-30b-a3b">Nemotron 3 Nano (Nvidia)</option>
-                        <option value="google/gemma-7b">Gemma 7B (Google)</option>
-                        <option value="google/gemma-2-9b-it">Gemma 2 9B (Google)</option>
-                        <option value="google/gemma-2-27b-it">Gemma 2 27B (Google)</option>
-                        <option value="mistralai/mixtral-8x22b-instruct-v0.1">Mixtral 8x22B (Mistral)</option>
-                        <option value="mistralai/mistral-large">Mistral Large</option>
-                        <option value="microsoft/phi-3-mini-128k-instruct">Phi-3 Mini 128K (Microsoft)</option>
-                        <option value="microsoft/phi-3-small-8k-instruct">Phi-3 Small 8K (Microsoft)</option>
+                        <option value="meta/llama-3.3-70b-instruct">Llama 3.3 70B (Meta)</option>
+                        <option value="nvidia/llama-3.1-nemotron-nano-8b-v1">Nemotron Nano 8B (Nvidia)</option>
+                        <option value="nvidia/llama-3.3-nemotron-super-49b-v1.5">Nemotron Super 49B (Nvidia)</option>
+                        <option value="nvidia/nemotron-mini-4b-instruct">Nemotron Mini 4B (Nvidia)</option>
+                        <option value="mistralai/mixtral-8x7b-instruct-v0.1">Mixtral 8x7B (Mistral)</option>
+                        <option value="mistralai/mistral-nemotron">Mistral Nemotron</option>
+                        <option value="google/gemma-2-2b-it">Gemma 2 2B (Google)</option>
+                        <option value="google/gemma-3n-e4b-it">Gemma 3n E4B (Google)</option>
                     </select>
                 </div>
             </div>
@@ -91,113 +74,23 @@
                 </div>
                 <h2 class="text-xl font-bold text-gray-400">Arena Lista y Segura</h2>
                 <p class="max-w-md text-xs md:text-sm px-4">
-                    Ahora tu app usa el backend de Vercel (Serverless). No más errores de CORS y tus contraseñas están ocultas y a salvo en las variables de entorno.
+                    Tu app usa el backend serverless de Vercel: sin errores de CORS y con tus claves de API ocultas en las variables de entorno.
                 </p>
             </div>
         </div>
     </main>
 
     <div class="bg-gray-900/90 backdrop-blur-md border-t border-gray-800 p-4 absolute bottom-0 w-full z-20">
-        <form id="chat-form" onsubmit="handleSend(event)" class="max-w-4xl mx-auto relative flex items-end gap-2">
-            <textarea id="prompt-input" rows="2" placeholder="Probá un problema de las Olimpiadas OMA acá..." 
-                class="w-full bg-gray-950 border border-gray-700 rounded-2xl py-3 px-4 pr-14 text-sm md:text-base text-gray-100 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-indigo-500 resize-none"
-                onkeydown="if(event.key === 'Enter' && !event.shiftKey) { event.preventDefault(); handleSend(event); }"></textarea>
-            
-            <button type="submit" id="send-btn" class="absolute right-2 bottom-2 p-2.5 bg-indigo-600 hover:bg-indigo-500 text-white rounded-xl transition-colors">
+        <form id="chat-form" class="max-w-4xl mx-auto relative flex items-end gap-2">
+            <textarea id="prompt-input" rows="2" placeholder="Probá un problema de las Olimpiadas OMA acá..."
+                class="w-full bg-gray-950 border border-gray-700 rounded-2xl py-3 px-4 pr-14 text-sm md:text-base text-gray-100 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-indigo-500 resize-none"></textarea>
+
+            <button type="submit" id="send-btn" class="absolute right-2 bottom-2 p-2.5 bg-indigo-600 hover:bg-indigo-500 disabled:opacity-50 disabled:cursor-not-allowed text-white rounded-xl transition-colors">
                 <i class="ph ph-paper-plane-right text-lg"></i>
             </button>
         </form>
     </div>
 
-    <script>
-        async function handleSend(e) {
-            e.preventDefault();
-            const input = document.getElementById('prompt-input');
-            const text = input.value.trim();
-            if (!text) return;
-
-            input.value = '';
-            document.getElementById('welcome-screen')?.remove();
-
-            const entryId = Date.now().toString();
-            const orModelSelect = document.getElementById('or-model');
-            const nvModelSelect = document.getElementById('nv-model');
-            const orModel = orModelSelect.value;
-            const nvModel = nvModelSelect.value;
-            const orModelName = orModelSelect.options[orModelSelect.selectedIndex].text;
-            const nvModelName = nvModelSelect.options[nvModelSelect.selectedIndex].text;
-
-            const chatHistory = document.getElementById('chat-history');
-            const messageHTML = `
-                <div id="entry-${entryId}" class="space-y-4 mb-8">
-                    <div class="flex justify-end">
-                        <div class="bg-gray-800 px-5 py-3 rounded-2xl rounded-tr-sm max-w-[90%] md:max-w-2xl border border-gray-700 flex items-start gap-3">
-                            <div class="flex-1 text-sm md:text-base whitespace-pre-wrap">${escapeHTML(text)}</div>
-                            <i class="ph ph-user text-xl text-gray-400 mt-0.5"></i>
-                        </div>
-                    </div>
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                        <div class="bg-gray-900 rounded-xl border border-indigo-900/40 flex flex-col">
-                            <div class="bg-gray-950/50 border-b border-indigo-900/30 p-2 flex justify-between items-center">
-                                <span class="text-xs text-indigo-300 font-semibold"><i class="ph ph-robot"></i> OpenRouter</span>
-                                <span class="text-[10px] text-gray-400 px-2 bg-gray-800 rounded truncate">${orModelName}</span>
-                            </div>
-                            <div id="or-response-${entryId}" class="p-4 text-sm prose text-gray-300">
-                                <i class="ph ph-spinner-gap animate-spin"></i> Pensando...
-                            </div>
-                        </div>
-                        <div class="bg-gray-900 rounded-xl border border-green-900/40 flex flex-col">
-                            <div class="bg-gray-950/50 border-b border-green-900/30 p-2 flex justify-between items-center">
-                                <span class="text-xs text-green-300 font-semibold"><i class="ph ph-cpu"></i> Nvidia</span>
-                                <span class="text-[10px] text-gray-400 px-2 bg-gray-800 rounded truncate">${nvModelName}</span>
-                            </div>
-                            <div id="nv-response-${entryId}" class="p-4 text-sm prose text-gray-300">
-                                <i class="ph ph-spinner-gap animate-spin"></i> Procesando...
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            `;
-            
-            chatHistory.insertAdjacentHTML('beforeend', messageHTML);
-            scrollToBottom();
-
-            // Llamamos a nuestra NUEVA API privada (backend) en vez de hacerlo directo
-            callBackend(text, 'openrouter', orModel, `or-response-${entryId}`);
-            callBackend(text, 'nvidia', nvModel, `nv-response-${entryId}`);
-        }
-
-        async function callBackend(message, provider, model, elementId) {
-            const responseDiv = document.getElementById(elementId);
-            try {
-                // Hacemos el fetch a la carpeta /api/chat que creamos en Vercel
-                const res = await fetch('/api/chat', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ message, provider, model })
-                });
-
-                const data = await res.json();
-                if (!res.ok) throw new Error(data.error || 'Error desconocido del backend');
-                
-                responseDiv.innerHTML = marked.parse(data.text);
-            } catch (error) {
-                responseDiv.innerHTML = `<span class="text-red-400 text-xs">${error.message}</span>`;
-            }
-            scrollToBottom();
-        }
-
-        function scrollToBottom() {
-            const container = document.getElementById('chat-container');
-            container.scrollTo({ top: container.scrollHeight, behavior: 'smooth' });
-        }
-
-        function escapeHTML(str) {
-            return str.replace(/[&<>'"]/g, t => ({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'}[t]));
-        }
-    </script>
+    <script src="script.js"></script>
 </body>
 </html>
-
-
-```

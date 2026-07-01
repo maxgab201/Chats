@@ -9,6 +9,13 @@ Compará en paralelo las respuestas de un modelo gratuito de **OpenRouter** y un
 - `script.js` — lógica del chat (fetch al backend, render de respuestas)
 - `api/chat.js` — función serverless de Vercel que reenvía el mensaje al proveedor elegido
 
+## Modelos disponibles
+
+- **OpenRouter**: los 22 modelos que hoy tienen sufijo `:free` en OpenRouter (más el router automático `openrouter/free`), agrupados por proveedor.
+- **NVIDIA NIM**: los ~100 modelos del catálogo de `build.nvidia.com` que funcionan con el endpoint `/v1/chat/completions` (se excluyen los de embeddings, reranking, traducción y reward, que usan otro formato de API).
+
+Ambos selectores tienen un buscador (escribí para filtrar por nombre o proveedor) en vez de un `<select>` plano, ya que son demasiadas opciones para una lista simple.
+
 ## Cómo conseguir las API keys gratis
 
 1. **OpenRouter**: creá una cuenta en [openrouter.ai](https://openrouter.ai), generá una API key en Settings → Keys. Los modelos con sufijo `:free` (y el router `openrouter/free`) no cobran créditos.

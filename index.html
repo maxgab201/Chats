@@ -26,40 +26,22 @@
                 </div>
             </div>
 
-            <!-- Selectores de modelos -->
+            <!-- Selectores de modelos (combobox con buscador, ver script.js) -->
             <div class="flex flex-col sm:flex-row gap-2 w-full md:w-auto text-sm">
-                <div class="flex items-center gap-2 bg-gray-800 px-3 py-1.5 rounded-lg border border-indigo-900/50">
-                    <i class="ph ph-robot text-indigo-400"></i>
-                    <select id="or-model" class="bg-transparent text-gray-200 outline-none w-full md:w-52 truncate">
-                        <optgroup label="Auto-Router Inteligente">
-                            <option value="openrouter/free">Elegir mejor gratis automáticamente</option>
-                        </optgroup>
-                        <optgroup label="Modelos Gratuitos (:free)">
-                            <option value="nvidia/nemotron-3-nano-30b-a3b:free">Nemotron 3 Nano 30B (Nvidia)</option>
-                            <option value="nvidia/nemotron-nano-9b-v2:free">Nemotron Nano 9B v2 (Nvidia)</option>
-                            <option value="nvidia/nemotron-3-super-120b-a12b:free">Nemotron 3 Super 120B (Nvidia)</option>
-                            <option value="openai/gpt-oss-20b:free">GPT-OSS 20B (OpenAI)</option>
-                            <option value="openai/gpt-oss-120b:free">GPT-OSS 120B (OpenAI)</option>
-                            <option value="google/gemma-4-31b-it:free">Gemma 4 31B (Google)</option>
-                            <option value="google/gemma-4-26b-a4b-it:free">Gemma 4 26B A4B (Google)</option>
-                        </optgroup>
-                    </select>
+                <div id="or-picker" class="model-picker relative flex items-center gap-2 bg-gray-800 px-3 py-1.5 rounded-lg border border-indigo-900/50 w-full sm:w-64">
+                    <i class="ph ph-robot text-indigo-400 shrink-0"></i>
+                    <button type="button" id="or-picker-btn" class="flex-1 flex items-center justify-between gap-2 bg-transparent text-gray-200 text-left outline-none min-w-0">
+                        <span id="or-picker-label" class="truncate"></span>
+                        <i class="ph ph-caret-down text-xs text-gray-400 shrink-0"></i>
+                    </button>
                 </div>
 
-                <div class="flex items-center gap-2 bg-gray-800 px-3 py-1.5 rounded-lg border border-green-900/50">
-                    <i class="ph ph-cpu text-green-400"></i>
-                    <select id="nv-model" class="bg-transparent text-gray-200 outline-none w-full md:w-52 truncate">
-                        <option value="meta/llama-3.1-8b-instruct">Llama 3.1 8B (Meta)</option>
-                        <option value="meta/llama-3.1-70b-instruct">Llama 3.1 70B (Meta)</option>
-                        <option value="meta/llama-3.3-70b-instruct">Llama 3.3 70B (Meta)</option>
-                        <option value="nvidia/llama-3.1-nemotron-nano-8b-v1">Nemotron Nano 8B (Nvidia)</option>
-                        <option value="nvidia/llama-3.3-nemotron-super-49b-v1.5">Nemotron Super 49B (Nvidia)</option>
-                        <option value="nvidia/nemotron-mini-4b-instruct">Nemotron Mini 4B (Nvidia)</option>
-                        <option value="mistralai/mixtral-8x7b-instruct-v0.1">Mixtral 8x7B (Mistral)</option>
-                        <option value="mistralai/mistral-nemotron">Mistral Nemotron</option>
-                        <option value="google/gemma-2-2b-it">Gemma 2 2B (Google)</option>
-                        <option value="google/gemma-3n-e4b-it">Gemma 3n E4B (Google)</option>
-                    </select>
+                <div id="nv-picker" class="model-picker relative flex items-center gap-2 bg-gray-800 px-3 py-1.5 rounded-lg border border-green-900/50 w-full sm:w-64">
+                    <i class="ph ph-cpu text-green-400 shrink-0"></i>
+                    <button type="button" id="nv-picker-btn" class="flex-1 flex items-center justify-between gap-2 bg-transparent text-gray-200 text-left outline-none min-w-0">
+                        <span id="nv-picker-label" class="truncate"></span>
+                        <i class="ph ph-caret-down text-xs text-gray-400 shrink-0"></i>
+                    </button>
                 </div>
             </div>
         </div>

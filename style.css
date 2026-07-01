@@ -262,3 +262,48 @@ html, body {
 .chat-list-item .chat-list-delete:hover {
     color: #f87171;
 }
+
+.agent-steps {
+    margin-bottom: 0.75rem;
+    border: 1px solid rgba(217, 119, 6, 0.35);
+    border-radius: 0.5rem;
+    background: rgba(120, 53, 15, 0.15);
+}
+
+.agent-steps summary {
+    cursor: pointer;
+    padding: 0.4rem 0.6rem;
+    font-size: 0.7rem;
+    color: #fbbf24;
+    font-weight: 600;
+    list-style: none;
+}
+
+.agent-steps summary::-webkit-details-marker {
+    display: none;
+}
+
+.agent-steps-list {
+    padding: 0 0.6rem 0.6rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.agent-step-head {
+    font-size: 0.7rem;
+    color: #fcd34d;
+    font-weight: 600;
+}
+
+.agent-step-input {
+    color: #e5e7eb;
+    font-weight: 400;
+}
+
+.agent-step-result {
+    font-size: 0.7rem;
+    color: #9ca3af;
+    white-space: pre-wrap;
+    margin-top: 0.15rem;
+}

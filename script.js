@@ -112,7 +112,7 @@ const MODEL_DATA = {
     ]
 };
 
-const AGENT_SYSTEM_PROMPT = 'Actuás como un agente autónomo experto. Antes de responder: (1) planificá internamente los pasos necesarios, (2) resolvé el problema de forma metódica, verificando cada paso, (3) si la tarea se puede descomponer en sub-tareas, resolvelas en orden. Presentá al final una respuesta clara, directa y verificada, mostrando el razonamiento clave sin ser repetitivo.';
+const AGENT_SYSTEM_PROMPT = 'Actuás como un agente autónomo experto con acceso a herramientas para buscar información actualizada. Planificá los pasos necesarios, usá las herramientas cuando la pregunta lo requiera (datos recientes, hechos verificables, algo que no sepas con certeza), y verificá tu respuesta antes de darla. Presentá al final una respuesta clara y directa, mostrando el razonamiento clave sin ser repetitivo.';
 
 function createModelPicker({ containerId, buttonId, labelId, models, defaultId, onChange }) {
     const container = document.getElementById(containerId);
@@ -469,10 +469,32 @@ document.getElementById('sidebar-close-btn').addEventListener('click', closeSide
 sidebarOverlayEl.addEventListener('click', closeSidebar);
 
 // ---------- Render de mensajes ----------
+function stepsTraceHTML(steps) {
+    if (!steps || steps.length === 0) return '';
+    const items = steps.map((s, i) => {
+        const icon = s.action === 'wiki_search' ? 'ph-magnifying-glass' : 'ph-link';
+        const label = s.action === 'wiki_search' ? 'Wikipedia' : 'Leer URL';
+        return `
+            <div class="agent-step">
+                <div class="agent-step-head"><i class="ph ${icon}"></i> ${i + 1}. ${label}: <span class="agent-step-input">${escapeHTML(s.input)}</span></div>
+                <div class="agent-step-result">${escapeHTML((s.result || '').slice(0, 500))}</div>
+            </div>
+        `;
+    }).join('');
+    return `
+        <details class="agent-steps">
+            <summary><i class="ph ph-brain"></i> Ver ${steps.length} paso${steps.length > 1 ? 's' : ''} del agente</summary>
+            <div class="agent-steps-list">${items}</div>
+        </details>
+    `;
+}
+
 function paneBodyHTML(pane) {
     if (pane.status === 'pending') return '<i class="ph ph-spinner-gap animate-spin"></i> Pensando...';
-    if (pane.status === 'error') return `<span class="error-text"><i class="ph ph-warning-circle"></i> ${escapeHTML(pane.error)}</span>`;
-    return marked.parse(pane.text || '');
+    if (pane.status === 'error') {
+        return `${stepsTraceHTML(pane.steps)}<span class="error-text"><i class="ph ph-warning-circle"></i> ${escapeHTML(pane.error)}</span>`;
+    }
+    return `${stepsTraceHTML(pane.steps)}${marked.parse(pane.text || '')}`;
 }
 
 function paneCardHTML(entryId, pane, agentBadgeHTML) {
@@ -619,9 +641,10 @@ async function callBackend({ text, provider, model, agent, chat, entry }) {
     const pane = entry.panes.find(p => p.provider === provider);
     const responseDiv = document.getElementById(`pane-${entry.id}-${provider}`);
     const content = buildContent(text, model);
+    const endpoint = agent ? '/api/agent' : '/api/chat';
 
     try {
-        const res = await fetch('/api/chat', {
+        const res = await fetch(endpoint, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
@@ -640,11 +663,12 @@ async function callBackend({ text, provider, model, agent, chat, entry }) {
         }
 
         const data = await res.json();
+        if (data.steps) pane.steps = data.steps;
         if (!res.ok) throw new Error(data.error || 'Error desconocido del backend');
 
         pane.status = 'done';
         pane.text = data.text;
-        responseDiv.innerHTML = marked.parse(data.text);
+        responseDiv.innerHTML = paneBodyHTML(pane);
 
         chat.history[provider] = chat.history[provider] || [];
         chat.history[provider].push({ role: 'user', content });
@@ -652,7 +676,7 @@ async function callBackend({ text, provider, model, agent, chat, entry }) {
     } catch (error) {
         pane.status = 'error';
         pane.error = error.message;
-        responseDiv.innerHTML = `<span class="error-text"><i class="ph ph-warning-circle"></i> ${escapeHTML(error.message)}</span>`;
+        responseDiv.innerHTML = paneBodyHTML(pane);
     }
     chat.updatedAt = Date.now();
     persistChats();

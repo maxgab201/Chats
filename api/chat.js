@@ -26,8 +26,8 @@ module.exports = async (req, res) => {
         : 'https://openrouter.ai/api/v1/chat/completions';
 
     const apiKey = provider === 'nvidia'
-        ? process.env.NVIDIA_API_KEY
-        : process.env.OPENROUTER_API_KEY;
+        ? (process.env.VITE_NVIDIA_API_KEY || process.env.NVIDIA_API_KEY)
+        : (process.env.VITE_OPENROUTER_API_KEY || process.env.OPENROUTER_API_KEY);
 
     if (!apiKey) {
         return res.status(500).json({ error: `API Key para ${provider} no configurada en las variables de entorno de Vercel.` });

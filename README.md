@@ -16,12 +16,12 @@ Compará en paralelo las respuestas de un modelo gratuito de **OpenRouter** y un
 
 ## Configuración en Vercel
 
-En el proyecto de Vercel, agregá estas variables de entorno (Settings → Environment Variables):
+En el proyecto de Vercel, agregá estas variables de entorno (Settings → Environment Variables). Acepta cualquiera de los dos nombres por variable (por compatibilidad con configuraciones previas):
 
-| Variable | Valor |
-|---|---|
-| `OPENROUTER_API_KEY` | tu API key de OpenRouter |
-| `NVIDIA_API_KEY` | tu API key de NVIDIA NIM |
+| Variable | Alternativa | Valor |
+|---|---|---|
+| `OPENROUTER_API_KEY` | `VITE_OPENROUTER_API_KEY` | tu API key de OpenRouter |
+| `NVIDIA_API_KEY` | `VITE_NVIDIA_API_KEY` | tu API key de NVIDIA NIM |
 
 Sin estas variables, el backend responde con un error claro indicando cuál falta (en vez de romperse).
 

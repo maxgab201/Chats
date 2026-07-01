@@ -18,7 +18,7 @@ module.exports = async (req, res) => {
         return res.status(405).json({ error: 'Método no permitido' });
     }
 
-    const { provider, model, content, system } = req.body || {};
+    const { provider, model, content, system, history } = req.body || {};
 
     if (!provider || !model || !content) {
         return res.status(400).json({ error: 'Faltan campos: provider, model o content' });
@@ -40,8 +40,14 @@ module.exports = async (req, res) => {
         return res.status(500).json({ error: `API Key para ${provider} no configurada en las variables de entorno de Vercel.` });
     }
 
+    const MAX_HISTORY_MESSAGES = 20;
+    const priorMessages = Array.isArray(history)
+        ? history.filter(m => m && (m.role === 'user' || m.role === 'assistant') && m.content).slice(-MAX_HISTORY_MESSAGES)
+        : [];
+
     const messages = [
         ...(system ? [{ role: 'system', content: system }] : []),
+        ...priorMessages,
         { role: 'user', content }
     ];
 

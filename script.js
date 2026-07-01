@@ -338,6 +338,210 @@ function clearAttachedImage() {
     imagePreviewRow.classList.add('hidden');
 }
 
+// ---------- Sistema de chats (persistencia en localStorage + memoria por conversación) ----------
+const CHATS_STORAGE_KEY = 'arena-ia-chats-v1';
+const ACTIVE_CHAT_STORAGE_KEY = 'arena-ia-active-chat-v1';
+const MAX_HISTORY_MESSAGES = 20;
+
+const chatsState = {
+    chats: [],
+    activeChatId: null
+};
+
+function loadChatsFromStorage() {
+    try {
+        const raw = localStorage.getItem(CHATS_STORAGE_KEY);
+        const chats = raw ? JSON.parse(raw) : [];
+        return Array.isArray(chats) ? chats : [];
+    } catch {
+        return [];
+    }
+}
+
+function persistChats() {
+    try {
+        localStorage.setItem(CHATS_STORAGE_KEY, JSON.stringify(chatsState.chats));
+        localStorage.setItem(ACTIVE_CHAT_STORAGE_KEY, chatsState.activeChatId || '');
+    } catch {
+        // localStorage puede fallar en modo privado; no es crítico para el uso de la sesión actual
+    }
+}
+
+function makeChat() {
+    return {
+        id: `chat-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`,
+        title: 'Nuevo chat',
+        createdAt: Date.now(),
+        updatedAt: Date.now(),
+        entries: [],
+        history: { openrouter: [], nvidia: [] }
+    };
+}
+
+function getActiveChat() {
+    return chatsState.chats.find(c => c.id === chatsState.activeChatId) || null;
+}
+
+function createNewChat() {
+    const chat = makeChat();
+    chatsState.chats.unshift(chat);
+    chatsState.activeChatId = chat.id;
+    persistChats();
+    renderSidebar();
+    renderActiveChat();
+    closeSidebarOnMobile();
+}
+
+function switchToChat(id) {
+    if (id === chatsState.activeChatId) return;
+    chatsState.activeChatId = id;
+    persistChats();
+    renderSidebar();
+    renderActiveChat();
+    closeSidebarOnMobile();
+}
+
+function deleteChat(id) {
+    if (!confirm('¿Borrar este chat?')) return;
+    const wasActive = id === chatsState.activeChatId;
+    chatsState.chats = chatsState.chats.filter(c => c.id !== id);
+    if (wasActive) {
+        if (chatsState.chats.length > 0) {
+            chatsState.activeChatId = chatsState.chats[0].id;
+        } else {
+            const chat = makeChat();
+            chatsState.chats.push(chat);
+            chatsState.activeChatId = chat.id;
+        }
+    }
+    persistChats();
+    renderSidebar();
+    renderActiveChat();
+}
+
+function renderSidebar() {
+    const listEl = document.getElementById('chat-list');
+    const sorted = [...chatsState.chats].sort((a, b) => b.updatedAt - a.updatedAt);
+    listEl.innerHTML = sorted.map(chat => `
+        <div class="chat-list-item${chat.id === chatsState.activeChatId ? ' is-active' : ''}" data-id="${chat.id}">
+            <i class="ph ph-chat-circle-text shrink-0"></i>
+            <span class="chat-list-title">${escapeHTML(chat.title)}</span>
+            <button type="button" class="chat-list-delete" data-id="${chat.id}" title="Borrar chat">
+                <i class="ph ph-trash"></i>
+            </button>
+        </div>
+    `).join('');
+}
+
+document.getElementById('chat-list').addEventListener('click', (e) => {
+    const deleteBtn = e.target.closest('.chat-list-delete');
+    if (deleteBtn) {
+        e.stopPropagation();
+        deleteChat(deleteBtn.dataset.id);
+        return;
+    }
+    const item = e.target.closest('.chat-list-item');
+    if (item) switchToChat(item.dataset.id);
+});
+
+document.getElementById('new-chat-btn').addEventListener('click', createNewChat);
+
+// ---------- Sidebar móvil (drawer) ----------
+const chatSidebarEl = document.getElementById('chat-sidebar');
+const sidebarOverlayEl = document.getElementById('sidebar-overlay');
+
+function openSidebar() {
+    chatSidebarEl.classList.add('is-open');
+    sidebarOverlayEl.classList.remove('hidden');
+}
+
+function closeSidebar() {
+    chatSidebarEl.classList.remove('is-open');
+    sidebarOverlayEl.classList.add('hidden');
+}
+
+function closeSidebarOnMobile() {
+    if (window.innerWidth < 768) closeSidebar();
+}
+
+document.getElementById('sidebar-open-btn').addEventListener('click', openSidebar);
+document.getElementById('sidebar-close-btn').addEventListener('click', closeSidebar);
+sidebarOverlayEl.addEventListener('click', closeSidebar);
+
+// ---------- Render de mensajes ----------
+function paneBodyHTML(pane) {
+    if (pane.status === 'pending') return '<i class="ph ph-spinner-gap animate-spin"></i> Pensando...';
+    if (pane.status === 'error') return `<span class="error-text"><i class="ph ph-warning-circle"></i> ${escapeHTML(pane.error)}</span>`;
+    return marked.parse(pane.text || '');
+}
+
+function paneCardHTML(entryId, pane, agentBadgeHTML) {
+    const isOpenRouter = pane.provider === 'openrouter';
+    const providerLabel = isOpenRouter ? 'OpenRouter' : 'Nvidia NIM';
+    const providerIcon = isOpenRouter ? 'ph-robot' : 'ph-cpu';
+    const borderClass = isOpenRouter ? 'border-indigo-900/40' : 'border-green-900/40';
+    const headerBorderClass = isOpenRouter ? 'border-indigo-900/30' : 'border-green-900/30';
+    return `
+        <div class="bg-gray-900 rounded-xl border ${borderClass} flex flex-col">
+            <div class="bg-gray-950/50 border-b ${headerBorderClass} p-2 flex justify-between items-center gap-2">
+                <span class="text-xs font-semibold flex items-center gap-1"><i class="ph ${providerIcon}"></i> ${providerLabel} ${agentBadgeHTML}</span>
+                <span class="text-[10px] text-gray-400 px-2 bg-gray-800 rounded truncate">${escapeHTML(pane.modelLabel)}</span>
+            </div>
+            <div id="pane-${entryId}-${pane.provider}" class="p-4 text-sm prose text-gray-300">${paneBodyHTML(pane)}</div>
+        </div>
+    `;
+}
+
+function entryHTML(entry) {
+    const imageHTML = entry.image ? `<img src="${entry.image}" class="attached-image-thumb" alt="Imagen adjunta">` : '';
+    const agentBadgeHTML = entry.agent ? '<span class="agent-badge"><i class="ph ph-brain"></i> Agente</span>' : '';
+    const panesHTML = entry.panes.map(p => paneCardHTML(entry.id, p, agentBadgeHTML)).join('');
+    const gridClass = entry.panes.length > 1 ? 'grid grid-cols-1 md:grid-cols-2 gap-4' : 'grid grid-cols-1 gap-4 max-w-2xl mx-auto w-full';
+
+    return `
+        <div id="entry-${entry.id}" class="space-y-4 mb-8 response-card">
+            <div class="flex justify-end">
+                <div class="bg-gray-800 px-5 py-3 rounded-2xl rounded-tr-sm max-w-[90%] md:max-w-2xl border border-gray-700 flex flex-col items-end gap-2">
+                    <div class="flex items-start gap-3 w-full">
+                        <div class="flex-1 text-sm md:text-base whitespace-pre-wrap">${escapeHTML(entry.text)}</div>
+                        <i class="ph ph-user text-xl text-gray-400 mt-0.5"></i>
+                    </div>
+                    ${imageHTML}
+                </div>
+            </div>
+            <div class="${gridClass}">${panesHTML}</div>
+        </div>
+    `;
+}
+
+function renderActiveChat() {
+    const chat = getActiveChat();
+    const chatHistoryEl = document.getElementById('chat-history');
+    if (!chat || chat.entries.length === 0) {
+        chatHistoryEl.innerHTML = `
+            <div id="welcome-screen" class="flex flex-col items-center justify-center text-center mt-10 md:mt-20 text-gray-500 space-y-4">
+                <div class="flex gap-4">
+                    <i class="ph ph-robot text-5xl text-indigo-900"></i>
+                    <i class="ph ph-cpu text-5xl text-green-900"></i>
+                </div>
+                <h2 class="text-xl font-bold text-gray-400">Arena Lista y Segura</h2>
+                <p class="max-w-md text-xs md:text-sm px-4">
+                    Tu app usa el backend serverless de Vercel: sin errores de CORS y con tus claves de API ocultas en las variables de entorno.
+                    Probá el modo Agente con un modelo top, o subí una imagen a un modelo con visión.
+                </p>
+            </div>
+        `;
+        return;
+    }
+    chatHistoryEl.innerHTML = chat.entries.map(entryHTML).join('');
+    scrollToBottom(true);
+
+    // Reengancha el scroll cuando terminan de cargar imágenes adjuntas (cambian la altura del contenido)
+    chatHistoryEl.querySelectorAll('img').forEach(img => {
+        img.addEventListener('load', () => scrollToBottom(true), { once: true });
+    });
+}
+
 // ---------- Chat ----------
 const chatForm = document.getElementById('chat-form');
 const promptInput = document.getElementById('prompt-input');
@@ -362,85 +566,60 @@ function buildContent(text, model) {
     return text;
 }
 
-function responseCardHTML({ id, providerLabel, providerIcon, borderClass, headerBorderClass, modelName, agentBadge }) {
-    return `
-        <div class="bg-gray-900 rounded-xl border ${borderClass} flex flex-col">
-            <div class="bg-gray-950/50 border-b ${headerBorderClass} p-2 flex justify-between items-center gap-2">
-                <span class="text-xs font-semibold flex items-center gap-1"><i class="ph ${providerIcon}"></i> ${providerLabel} ${agentBadge}</span>
-                <span class="text-[10px] text-gray-400 px-2 bg-gray-800 rounded truncate">${escapeHTML(modelName)}</span>
-            </div>
-            <div id="${id}" class="p-4 text-sm prose text-gray-300">
-                <i class="ph ph-spinner-gap animate-spin"></i> Pensando...
-            </div>
-        </div>
-    `;
-}
-
 async function handleSend(e) {
     e.preventDefault();
     const text = promptInput.value.trim();
     if (!text) return;
 
+    const chat = getActiveChat();
     const selections = activeSelections();
     const usingImage = Boolean(appState.image);
     const usingAgent = appState.agentMode;
+    const attachedImage = appState.image ? appState.image.dataUrl : null;
 
     promptInput.value = '';
+
+    if (chat.entries.length === 0) {
+        chat.title = text.length > 40 ? `${text.slice(0, 40)}…` : text;
+    }
+
+    const entry = {
+        id: Date.now().toString(),
+        text,
+        image: attachedImage,
+        agent: usingAgent,
+        panes: selections.map(sel => ({
+            provider: sel.provider,
+            modelLabel: sel.model.label,
+            status: 'pending'
+        }))
+    };
+
+    chat.entries.push(entry);
+    chat.updatedAt = Date.now();
+    persistChats();
+    renderSidebar();
+
     document.getElementById('welcome-screen')?.remove();
-
-    const entryId = Date.now().toString();
-    const chatHistory = document.getElementById('chat-history');
-
-    const imageHTML = usingImage ? `<img src="${appState.image.dataUrl}" class="attached-image-thumb" alt="Imagen adjunta">` : '';
-
-    const agentBadgeHTML = usingAgent ? '<span class="agent-badge"><i class="ph ph-brain"></i> Agente</span>' : '';
-
-    const panesHTML = selections.map((sel, i) => {
-        const isOpenRouter = sel.provider === 'openrouter';
-        return responseCardHTML({
-            id: `resp-${entryId}-${i}`,
-            providerLabel: isOpenRouter ? 'OpenRouter' : 'Nvidia NIM',
-            providerIcon: isOpenRouter ? 'ph-robot' : 'ph-cpu',
-            borderClass: isOpenRouter ? 'border-indigo-900/40' : 'border-green-900/40',
-            headerBorderClass: isOpenRouter ? 'border-indigo-900/30' : 'border-green-900/30',
-            modelName: sel.model.label,
-            agentBadge: agentBadgeHTML
-        });
-    }).join('');
-
-    const gridClass = selections.length > 1 ? 'grid grid-cols-1 md:grid-cols-2 gap-4' : 'grid grid-cols-1 gap-4 max-w-2xl mx-auto w-full';
-
-    const messageHTML = `
-        <div id="entry-${entryId}" class="space-y-4 mb-8 response-card">
-            <div class="flex justify-end">
-                <div class="bg-gray-800 px-5 py-3 rounded-2xl rounded-tr-sm max-w-[90%] md:max-w-2xl border border-gray-700 flex flex-col items-end gap-2">
-                    <div class="flex items-start gap-3 w-full">
-                        <div class="flex-1 text-sm md:text-base whitespace-pre-wrap">${escapeHTML(text)}</div>
-                        <i class="ph ph-user text-xl text-gray-400 mt-0.5"></i>
-                    </div>
-                    ${imageHTML}
-                </div>
-            </div>
-            <div class="${gridClass}">${panesHTML}</div>
-        </div>
-    `;
-
-    chatHistory.insertAdjacentHTML('beforeend', messageHTML);
+    document.getElementById('chat-history').insertAdjacentHTML('beforeend', entryHTML(entry));
     scrollToBottom();
 
+    const imgEl = document.querySelector(`#entry-${entry.id} img.attached-image-thumb`);
+    if (imgEl) imgEl.addEventListener('load', () => scrollToBottom(true), { once: true });
+
     sendBtn.disabled = true;
-    await Promise.allSettled(selections.map((sel, i) =>
-        callBackend({
-            text, provider: sel.provider, model: sel.model,
-            agent: usingAgent, elementId: `resp-${entryId}-${i}`
-        })
+    await Promise.allSettled(selections.map(sel =>
+        callBackend({ text, provider: sel.provider, model: sel.model, agent: usingAgent, chat, entry })
     ));
     sendBtn.disabled = false;
     clearAttachedImage();
 }
 
-async function callBackend({ text, provider, model, agent, elementId }) {
-    const responseDiv = document.getElementById(elementId);
+async function callBackend({ text, provider, model, agent, chat, entry }) {
+    const pane = entry.panes.find(p => p.provider === provider);
+    const responseDiv = document.getElementById(`pane-${entry.id}-${provider}`);
+    const content = buildContent(text, model);
+
     try {
         const res = await fetch('/api/chat', {
             method: 'POST',
@@ -448,8 +627,9 @@ async function callBackend({ text, provider, model, agent, elementId }) {
             body: JSON.stringify({
                 provider,
                 model: model.id,
-                content: buildContent(text, model),
-                system: agent ? AGENT_SYSTEM_PROMPT : undefined
+                content,
+                system: agent ? AGENT_SYSTEM_PROMPT : undefined,
+                history: (chat.history[provider] || []).slice(-MAX_HISTORY_MESSAGES)
             })
         });
 
@@ -462,18 +642,47 @@ async function callBackend({ text, provider, model, agent, elementId }) {
         const data = await res.json();
         if (!res.ok) throw new Error(data.error || 'Error desconocido del backend');
 
+        pane.status = 'done';
+        pane.text = data.text;
         responseDiv.innerHTML = marked.parse(data.text);
+
+        chat.history[provider] = chat.history[provider] || [];
+        chat.history[provider].push({ role: 'user', content });
+        chat.history[provider].push({ role: 'assistant', content: data.text });
     } catch (error) {
+        pane.status = 'error';
+        pane.error = error.message;
         responseDiv.innerHTML = `<span class="error-text"><i class="ph ph-warning-circle"></i> ${escapeHTML(error.message)}</span>`;
     }
+    chat.updatedAt = Date.now();
+    persistChats();
     scrollToBottom();
 }
 
-function scrollToBottom() {
+function scrollToBottom(instant) {
     const container = document.getElementById('chat-container');
-    container.scrollTo({ top: container.scrollHeight, behavior: 'smooth' });
+    requestAnimationFrame(() => {
+        if (instant) {
+            container.scrollTop = container.scrollHeight;
+        } else {
+            container.scrollTo({ top: container.scrollHeight, behavior: 'smooth' });
+        }
+    });
 }
 
 function escapeHTML(str) {
     return str.replace(/[&<>'"]/g, t => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', "'": '&#39;', '"': '&quot;' }[t]));
 }
+
+// ---------- Arranque ----------
+chatsState.chats = loadChatsFromStorage();
+const savedActiveId = localStorage.getItem(ACTIVE_CHAT_STORAGE_KEY);
+if (chatsState.chats.length === 0) {
+    chatsState.chats.push(makeChat());
+}
+chatsState.activeChatId = chatsState.chats.some(c => c.id === savedActiveId)
+    ? savedActiveId
+    : chatsState.chats[0].id;
+
+renderSidebar();
+renderActiveChat();

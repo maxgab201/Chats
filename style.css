@@ -1,3 +1,17 @@
+html, body {
+    height: 100%;
+    overscroll-behavior: none;
+}
+
+.app-height {
+    height: 100vh;
+    height: 100dvh;
+}
+
+#chat-container {
+    overscroll-behavior: contain;
+}
+
 .prose pre {
     background-color: #1f2937;
     padding: 1rem;
@@ -185,4 +199,66 @@
     border-radius: 0.5rem;
     border: 1px solid #374151;
     margin-top: 0.5rem;
+}
+
+.chat-sidebar {
+    width: 17rem;
+    position: fixed;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    transform: translateX(-100%);
+    transition: transform 0.2s ease-out;
+}
+
+.chat-sidebar.is-open {
+    transform: translateX(0);
+}
+
+@media (min-width: 768px) {
+    .chat-sidebar {
+        position: relative;
+        transform: none;
+    }
+}
+
+.chat-list-item {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.5rem 0.6rem;
+    border-radius: 0.5rem;
+    font-size: 0.8rem;
+    color: #d1d5db;
+    cursor: pointer;
+}
+
+.chat-list-item:hover {
+    background: #1f2937;
+}
+
+.chat-list-item.is-active {
+    background: #312e81;
+    color: #fff;
+}
+
+.chat-list-item .chat-list-title {
+    flex: 1;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.chat-list-item .chat-list-delete {
+    color: #6b7280;
+    opacity: 0;
+    flex-shrink: 0;
+}
+
+.chat-list-item:hover .chat-list-delete {
+    opacity: 1;
+}
+
+.chat-list-item .chat-list-delete:hover {
+    color: #f87171;
 }

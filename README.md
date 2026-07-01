@@ -8,6 +8,7 @@ Compará en paralelo las respuestas de un modelo gratuito de **OpenRouter** y un
 - **1 sola IA**: elegís un proveedor y un modelo, y solo se llama a ese.
 - **Modo Agente** (⭐): habilitado únicamente cuando el/los modelo(s) activos son "top" (modelos grandes/flagship). Agrega un system prompt que le pide al modelo planificar paso a paso y verificar su respuesta antes de contestar.
 - **Imágenes** (🖼️): el botón de adjuntar se habilita solo si el modelo activo soporta visión. La imagen se envía como `image_url` (base64) junto al texto.
+- **Sistema de chats**: sidebar con múltiples conversaciones guardadas en `localStorage` (persisten entre recargas). Cada chat tiene memoria propia por proveedor (las últimas 20 respuestas se reenvían como contexto en cada mensaje nuevo). "Nuevo chat", cambiar entre chats y borrar chats desde la barra lateral; en mobile se abre como drawer con botón hamburguesa.
 
 ## Estructura
 
